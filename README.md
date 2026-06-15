@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# nouwillcode — Blog tech
 
-## Getting Started
+Blog tech & personal branding au style « feed LinkedIn », 100 % front-end (SSG / ISR),
+sans base de données ni backend custom. Le contenu vit entièrement dans **Sanity**.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router) · **React 19** · **TypeScript** strict
+- **Tailwind CSS v4** + composants façon **shadcn/ui**
+- **Sanity v5** — Studio embarqué sur [`/studio`](http://localhost:3000/studio)
+- **GROQ** pour le requêtage · **@portabletext/react** pour le rendu riche
+- **@sanity/code-input** + **Shiki** pour les blocs de code colorés
+- Déploiement cible : **Dokploy**
+
+## Démarrer
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Front : http://localhost:3000
+- Sanity Studio : http://localhost:3000/studio
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Crée d'abord un **Auteur**, quelques **Tags**, puis des **Articles** dans le Studio.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Variables d'environnement
 
-## Learn More
+Copier `.env.local.example` → `.env.local` (déjà généré par `sanity init`) :
 
-To learn more about Next.js, take a look at the following resources:
+```
+NEXT_PUBLIC_SANITY_PROJECT_ID=...
+NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2024-10-01
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├─ app/
+│  ├─ (site)/                  # Site public (header + feed/sidebar)
+│  │  ├─ layout.tsx
+│  │  ├─ page.tsx              # Feed des articles (ISR 60s)
+│  │  └─ posts/[slug]/page.tsx # Article (SSG + ISR)
+│  ├─ studio/[[...tool]]/      # Sanity Studio embarqué
+│  └─ layout.tsx               # Root layout (fonts, metadata)
+├─ components/
+│  ├─ ui/                      # Primitives (card, button, badge, avatar…)
+│  ├─ feed/post-card.tsx
+│  ├─ layout/                  # site-header, profile-sidebar, tag-list
+│  ├─ portable/                # PortableText + CodeBlock (Shiki)
+│  └─ icons/brand-icons.tsx
+├─ lib/                        # utils (cn), format (date, reading time)
+└─ sanity/
+   ├─ env.ts
+   ├─ lib/                     # client, image (urlFor), queries (GROQ), highlight
+   ├─ schemaTypes/             # post, author, category, blockContent
+   └─ structure.ts
+```
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm dev      # serveur de dev
+pnpm build    # build de production
+pnpm start    # serveur de production
+pnpm lint     # ESLint
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Déploiement (Dokploy)
+
+Build standard Next.js. Renseigner les 3 variables `NEXT_PUBLIC_SANITY_*`
+dans Dokploy. (Étape suivante : ajouter un `Dockerfile` + `output: 'standalone'`
+dans `next.config.ts`.)
