@@ -36,26 +36,15 @@ You MUST adhere to the following rules when writing or modifying code in this pr
 │   └── window.svg
 ├── src/                    # Application source code
 │   ├── app/                # Next.js App Router (Routing and pages)
-│   │   ├── (site)/         # Route group for the main public website
-│   │   │   ├── posts/
-│   │   │   │   └── [slug]/
-│   │   │   │       └── page.tsx # Individual blog post detail page
-│   │   │   ├── layout.tsx  # Site-wide layout (header, footer, sidebars)
-│   │   │   └── page.tsx    # Home page displaying the post feed
 │   │   ├── studio/         # Sanity Studio route
 │   │   │   └── [[...tool]]/
 │   │   │       └── page.tsx # Sanity Studio mounting page
 │   │   ├── globals.css     # Global stylesheets and Tailwind CSS setup
-│   │   └── layout.tsx      # Root HTML layout structure
+│   │   ├── layout.tsx      # Root HTML layout structure
+│   │   └── page.tsx        # Main application entry point
 │   ├── components/         # Reusable React components
-│   │   ├── feed/           # Feed-related components
-│   │   │   └── post-card.tsx # Card component to render post previews
 │   │   ├── icons/          # Custom SVG brand and utility icons
 │   │   │   └── brand-icons.tsx
-│   │   ├── layout/         # UI layout structures (header, sidebar, navigation)
-│   │   │   ├── profile-sidebar.tsx # Sidebar with user profile info
-│   │   │   ├── site-header.tsx    # Global header navbar
-│   │   │   └── tag-list.tsx       # Component to display tag lists
 │   │   ├── portable/       # Custom rendering components for Sanity Portable Text
 │   │   │   ├── code-block.tsx     # Custom code block syntax highlighting component
 │   │   │   └── portable-text.tsx  # Rich-text portable text renderer wrapper
