@@ -8,6 +8,8 @@ import {visionTool} from '@sanity/vision'
 import {codeInput} from '@sanity/code-input'
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
+import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
+import {media} from 'sanity-plugin-media'
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import {apiVersion, dataset, projectId} from './src/sanity/env'
@@ -27,5 +29,9 @@ export default defineConfig({
     // Vision is for querying with GROQ from inside the Studio
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({defaultApiVersion: apiVersion}),
+    // Gestionnaire de médias avancé
+    media(),
+    // Banque d'images libre de droits
+    unsplashImageAsset(),
   ],
 })

@@ -45,6 +45,9 @@ You MUST adhere to the following rules when writing or modifying code in this pr
 │   ├── components/         # Reusable React components
 │   │   ├── icons/          # Custom SVG brand and utility icons
 │   │   │   └── brand-icons.tsx
+│   │   ├── layout/         # Layout components (navbar, footer)
+│   │   │   ├── footer.tsx  # Site footer
+│   │   │   └── navbar.tsx  # Site navigation bar
 │   │   ├── portable/       # Custom rendering components for Sanity Portable Text
 │   │   │   ├── code-block.tsx     # Custom code block syntax highlighting component
 │   │   │   └── portable-text.tsx  # Rich-text portable text renderer wrapper

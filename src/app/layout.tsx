@@ -1,14 +1,17 @@
-import type {Metadata} from 'next'
-import {Geist, Geist_Mono} from 'next/font/google'
+import type { Metadata } from 'next'
+import { Outfit, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
+import { Navbar } from '@/components/layout/navbar'
+import { Footer } from '@/components/layout/footer'
+import { SanityLive } from '@/sanity/lib/live'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const outfit = Outfit({
+  variable: '--font-sans',
   subsets: ['latin'],
 })
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const jetBrainsMono = JetBrains_Mono({
+  variable: '--font-mono',
   subsets: ['latin'],
 })
 
@@ -29,9 +32,18 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${outfit.variable} ${jetBrainsMono.variable} antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full font-sans">{children}</body>
+      <body className="flex min-h-screen flex-col font-sans bg-background text-foreground">
+        <Navbar />
+        {/* main container centré pour tout le contenu */}
+        <main className="container mx-auto flex-1 px-4 py-8 md:px-8 md:py-12">
+          {children}
+        </main>
+        <Footer />
+        <SanityLive />
+      </body>
     </html>
   )
 }

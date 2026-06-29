@@ -1,4 +1,4 @@
-import {highlightCode} from '@/sanity/lib/highlight'
+import { highlightCode } from "@/sanity/lib/highlight"
 
 interface CodeValue {
   code?: string
@@ -6,7 +6,7 @@ interface CodeValue {
   filename?: string
 }
 
-export async function CodeBlock({value}: {value: CodeValue}) {
+export async function CodeBlock({ value }: { value: CodeValue }) {
   if (!value?.code) return null
 
   const html = await highlightCode(value.code, value.language)
@@ -20,8 +20,8 @@ export async function CodeBlock({value}: {value: CodeValue}) {
         </figcaption>
       ) : null}
       <div
-        className="text-sm [&_pre]:!bg-transparent [&_pre]:!m-0 [&_pre]:overflow-x-auto [&_pre]:p-4"
-        dangerouslySetInnerHTML={{__html: html}}
+        className="text-sm [&_pre]:!m-0 [&_pre]:overflow-x-auto [&_pre]:!bg-transparent [&_pre]:p-4"
+        dangerouslySetInnerHTML={{ __html: html }}
       />
     </figure>
   )

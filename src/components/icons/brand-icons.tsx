@@ -1,15 +1,10 @@
-import type {SVGProps} from 'react'
+import type { SVGProps } from "react"
 
 type IconProps = SVGProps<SVGSVGElement>
 
-function Base({children, ...props}: IconProps & {children: React.ReactNode}) {
+function Base({ children, ...props }: IconProps & { children: React.ReactNode }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-      {...props}
-    >
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
       {children}
     </svg>
   )
