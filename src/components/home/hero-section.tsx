@@ -47,7 +47,8 @@ export function HeroSection({
 
   return (
     <section className="w-full pt-8 md:pt-12">
-      <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-6">
+      <p className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
         Featured
       </p>
 

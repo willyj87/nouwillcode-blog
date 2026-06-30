@@ -26,7 +26,7 @@ export function PostCard({ post }: { post: PostCardData }) {
           </div>
         )}
       </Link>
-      <CardHeader className="flex-1 gap-2 p-4">
+      <CardHeader className="flex-1 gap-2 p-5">
         {post?.categories?.[0] && (
           <div>
             <Badge variant="secondary" className="hover:bg-primary hover:text-primary-foreground transition-colors">
@@ -34,14 +34,22 @@ export function PostCard({ post }: { post: PostCardData }) {
             </Badge>
           </div>
         )}
-        <CardTitle className="text-base leading-snug line-clamp-2 hover:text-primary transition-colors">
+        <CardTitle className="text-lg leading-snug line-clamp-2 hover:text-primary transition-colors">
           <Link href={`/posts/${post?.slug}`}>{post?.title}</Link>
         </CardTitle>
         <CardDescription className="line-clamp-2 text-sm text-foreground/70">
           {post?.excerpt}
         </CardDescription>
       </CardHeader>
-      <CardContent className="mt-auto px-4 pb-4 text-xs text-muted-foreground">
+      <CardContent className="mt-auto flex items-center gap-2 px-5 pb-5 text-xs text-muted-foreground">
+        {post?.author?.name && (
+          <>
+            <span className="font-medium text-foreground/80">
+              {post.author.name}
+            </span>
+            {post?.publishedAt && <span aria-hidden>·</span>}
+          </>
+        )}
         {post?.publishedAt && (
           <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
         )}

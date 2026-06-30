@@ -474,7 +474,7 @@ export type AllCategoriesQueryResult = Array<{
 
 // Source: src/sanity/lib/queries/article.ts
 // Variable: homepageDataQuery
-// Query: {    "homepage": *[_type == "homepage" && _id == "homepage"][0] {      heroTitle,      heroTagline,      heroImage,      ctaText,      newsletterTitle,      newsletterDescription,      "featuredPost": featuredPost->{          _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }      }    },    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...7] {        _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }    }  }
+// Query: {    "homepage": *[_type == "homepage" && _id == "homepage"][0] {      heroTitle,      heroTagline,      heroImage,      ctaText,      newsletterTitle,      newsletterDescription,      "featuredPost": featuredPost->{          _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }      }    },    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...13] {        _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }    },    "author": *[_type == "author"] | order(_createdAt asc)[0] {      name,      headline,      bio,      image,      socials,      "postCount": count(*[_type == "post" && references(^._id)])    },    "categories": *[_type == "category"] | order(title asc) {      _id,      title,      "slug": slug.current,      "count": count(*[_type == "post" && references(^._id)])    }  }
 export type HomepageDataQueryResult = {
   homepage: {
     heroTitle: string | null
@@ -557,6 +557,32 @@ export type HomepageDataQueryResult = {
       slug: string | null
     }> | null
   }>
+  author: {
+    name: string | null
+    headline: string | null
+    bio: string | null
+    image: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: "image"
+    } | null
+    socials: Array<{
+      platform?: "email" | "github" | "linkedin" | "twitter" | "website" | "youtube"
+      url?: string
+      _type: "social"
+      _key: string
+    }> | null
+    postCount: number
+  } | null
+  categories: Array<{
+    _id: string
+    title: string | null
+    slug: string | null
+    count: number
+  }>
 }
 
 // Source: src/sanity/lib/queries/layout.ts
@@ -594,7 +620,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "post" && defined(slug.current)]{ "slug": slug.current }\n': PostSlugsQueryResult
     '\n  *[_type == "author"] | order(_createdAt asc)[0] {\n    name,\n    headline,\n    bio,\n    image,\n    socials\n  }\n': AuthorProfileQueryResult
     '\n  *[_type == "category"] | order(title asc) {\n    _id,\n    title,\n    "slug": slug.current,\n    "count": count(*[_type == "post" && references(^._id)])\n  }\n': AllCategoriesQueryResult
-    '\n  {\n    "homepage": *[_type == "homepage" && _id == "homepage"][0] {\n      heroTitle,\n      heroTagline,\n      heroImage,\n      ctaText,\n      newsletterTitle,\n      newsletterDescription,\n      "featuredPost": featuredPost->{\n        \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n      }\n    },\n    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...7] {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n    }\n  }\n': HomepageDataQueryResult
+    '\n  {\n    "homepage": *[_type == "homepage" && _id == "homepage"][0] {\n      heroTitle,\n      heroTagline,\n      heroImage,\n      ctaText,\n      newsletterTitle,\n      newsletterDescription,\n      "featuredPost": featuredPost->{\n        \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n      }\n    },\n    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...13] {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n    },\n    "author": *[_type == "author"] | order(_createdAt asc)[0] {\n      name,\n      headline,\n      bio,\n      image,\n      socials,\n      "postCount": count(*[_type == "post" && references(^._id)])\n    },\n    "categories": *[_type == "category"] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current,\n      "count": count(*[_type == "post" && references(^._id)])\n    }\n  }\n': HomepageDataQueryResult
     '\n  *[_type == "navbar"][0] {\n    brandLogo {\n      asset->{\n        url\n      },\n      alt\n    },\n    brandName,\n    links[] {\n      label,\n      href\n    },\n    githubUrl\n  }\n': NavbarQueryResult
     '\n  *[_type == "footer"][0] {\n    text,\n    githubUrl\n  }\n': FooterQueryResult
   }

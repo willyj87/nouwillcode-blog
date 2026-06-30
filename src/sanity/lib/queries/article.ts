@@ -1,4 +1,4 @@
-import { defineQuery, groq } from "next-sanity"
+import { defineQuery } from "next-sanity"
 
 /** Common fields for a post as displayed in the feed. */
 const postCardFields = /* groq */ `
@@ -76,8 +76,22 @@ export const homepageDataQuery = defineQuery(`
         ${postCardFields}
       }
     },
-    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...7] {
+    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...13] {
       ${postCardFields}
+    },
+    "author": *[_type == "author"] | order(_createdAt asc)[0] {
+      name,
+      headline,
+      bio,
+      image,
+      socials,
+      "postCount": count(*[_type == "post" && references(^._id)])
+    },
+    "categories": *[_type == "category"] | order(title asc) {
+      _id,
+      title,
+      "slug": slug.current,
+      "count": count(*[_type == "post" && references(^._id)])
     }
   }
 `)
