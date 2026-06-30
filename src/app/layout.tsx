@@ -3,6 +3,7 @@ import { Outfit, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
+import { Toaster } from '@/components/ui/sonner'
 import { SanityLive } from '@/sanity/lib/live'
 
 const outfit = Outfit({
@@ -17,11 +18,11 @@ const jetBrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'nouwillcode — Blog tech',
+    default: 'nouwillcode — Tech blog',
     template: '%s · nouwillcode',
   },
   description:
-    'Articles tech, retours d’expérience et notes d’ingénierie logicielle.',
+    'Tech articles, lessons learned, and software engineering notes.',
 }
 
 export default function RootLayout({
@@ -31,17 +32,18 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="fr"
+      lang="en"
       className={`${outfit.variable} ${jetBrainsMono.variable} antialiased`}
       suppressHydrationWarning
     >
       <body className="flex min-h-screen flex-col font-sans bg-background text-foreground">
         <Navbar />
-        {/* main container centré pour tout le contenu */}
+        {/* main container centered for all content */}
         <main className="container mx-auto flex-1 px-4 py-8 md:px-8 md:py-12">
           {children}
         </main>
         <Footer />
+        <Toaster />
         <SanityLive />
       </body>
     </html>

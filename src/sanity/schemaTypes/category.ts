@@ -3,14 +3,14 @@ import {defineField, defineType} from 'sanity'
 
 export const categoryType = defineType({
   name: 'category',
-  title: 'Tag / Catégorie',
+  title: 'Tag / Category',
   type: 'document',
   icon: TagIcon,
   fields: [
     defineField({
       name: 'title',
-      title: 'Nom',
-      description: 'Ex : TypeScript, Next.js, DevOps…',
+      title: 'Name',
+      description: 'E.g. TypeScript, Next.js, DevOps…',
       type: 'string',
       validation: (rule) => rule.required(),
     }),

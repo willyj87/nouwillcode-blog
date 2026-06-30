@@ -3,13 +3,13 @@ import {defineField, defineType} from 'sanity'
 
 export const postType = defineType({
   name: 'post',
-  title: 'Article',
+  title: 'Post',
   type: 'document',
   icon: DocumentTextIcon,
   fields: [
     defineField({
       name: 'title',
-      title: 'Titre',
+      title: 'Title',
       type: 'string',
       validation: (rule) => rule.required(),
     }),
@@ -22,28 +22,35 @@ export const postType = defineType({
     }),
     defineField({
       name: 'excerpt',
-      title: 'Accroche',
-      description: 'Résumé court affiché dans le feed (1 à 2 phrases).',
+      title: 'Excerpt',
+      description: 'Short summary shown in the feed (1 to 2 sentences).',
       type: 'text',
       rows: 3,
       validation: (rule) => rule.max(280),
     }),
     defineField({
       name: 'mainImage',
-      title: 'Image de couverture',
+      title: 'Cover image',
       type: 'image',
       options: {hotspot: true},
       fields: [
         defineField({
           name: 'alt',
-          title: 'Texte alternatif',
+          title: 'Alt text',
+          description: 'Describe the image for accessibility and SEO.',
           type: 'string',
+          validation: (rule) =>
+            rule.custom((alt, context) => {
+              const parent = context.parent as {asset?: unknown} | undefined
+              if (parent?.asset && !alt) return 'Alt text is required when an image is set.'
+              return true
+            }),
         }),
       ],
     }),
     defineField({
       name: 'author',
-      title: 'Auteur',
+      title: 'Author',
       type: 'reference',
       to: [{type: 'author'}],
       validation: (rule) => rule.required(),
@@ -56,14 +63,14 @@ export const postType = defineType({
     }),
     defineField({
       name: 'publishedAt',
-      title: 'Date de publication',
+      title: 'Published date',
       type: 'datetime',
       initialValue: () => new Date().toISOString(),
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'body',
-      title: 'Contenu',
+      title: 'Content',
       type: 'blockContent',
     }),
   ],
@@ -76,8 +83,8 @@ export const postType = defineType({
     },
     prepare({title, author, media, date}) {
       const formatted = date
-        ? new Date(date).toLocaleDateString('fr-FR')
-        : 'Brouillon'
+        ? new Date(date).toLocaleDateString('en-US')
+        : 'Draft'
       return {
         title,
         subtitle: [author, formatted].filter(Boolean).join(' · '),

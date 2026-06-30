@@ -15,6 +15,58 @@
 export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: schema.json
+export type SanityImageAssetReference = {
+  _ref: string
+  _type: "reference"
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
+}
+
+export type PostReference = {
+  _ref: string
+  _type: "reference"
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: "post"
+}
+
+export type Homepage = {
+  _id: string
+  _type: "homepage"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  heroTitle: string
+  heroTagline: string
+  heroImage?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: "image"
+  }
+  featuredPost?: PostReference
+  ctaText?: string
+  newsletterTitle?: string
+  newsletterDescription?: string
+}
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop"
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot"
+  x: number
+  y: number
+  height: number
+  width: number
+}
+
 export type Footer = {
   _id: string
   _type: "footer"
@@ -31,20 +83,20 @@ export type Navbar = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  brandName?: string
+  brandLogo: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: "image"
+  }
   links?: Array<{
-    label?: string
-    href?: string
+    label: string
+    href: string
     _key: string
   }>
   githubUrl?: string
-}
-
-export type SanityImageAssetReference = {
-  _ref: string
-  _type: "reference"
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
 }
 
 export type BlockContent = Array<
@@ -87,14 +139,14 @@ export type Category = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  slug?: Slug
+  title: string
+  slug: Slug
   description?: string
 }
 
 export type Slug = {
   _type: "slug"
-  current?: string
+  current: string
   source?: string
 }
 
@@ -118,8 +170,8 @@ export type Post = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  slug?: Slug
+  title: string
+  slug: Slug
   excerpt?: string
   mainImage?: {
     asset?: SanityImageAssetReference
@@ -129,30 +181,14 @@ export type Post = {
     alt?: string
     _type: "image"
   }
-  author?: AuthorReference
+  author: AuthorReference
   categories?: Array<
     {
       _key: string
     } & CategoryReference
   >
-  publishedAt?: string
+  publishedAt: string
   body?: BlockContent
-}
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop"
-  top?: number
-  bottom?: number
-  left?: number
-  right?: number
-}
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot"
-  x?: number
-  y?: number
-  height?: number
-  width?: number
 }
 
 export type Author = {
@@ -161,8 +197,8 @@ export type Author = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  name?: string
-  slug?: Slug
+  name: string
+  slug: Slug
   headline?: string
   image?: {
     asset?: SanityImageAssetReference
@@ -174,11 +210,20 @@ export type Author = {
   }
   bio?: string
   socials?: Array<{
-    platform?: "linkedin" | "github" | "twitter" | "website" | "email" | "youtube"
-    url?: string
+    platform: "linkedin" | "github" | "twitter" | "website" | "email" | "youtube"
+    url: string
     _type: "social"
     _key: string
   }>
+}
+
+export type MediaTag = {
+  _id: string
+  _type: "media.tag"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: Slug
 }
 
 export type Code = {
@@ -210,9 +255,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions"
-  height?: number
-  width?: number
-  aspectRatio?: number
+  height: number
+  width: number
+  aspectRatio: number
 }
 
 export type SanityImageMetadata = {
@@ -238,14 +283,14 @@ export type SanityFileAsset = {
   title?: string
   description?: string
   altText?: string
-  sha1hash?: string
-  extension?: string
-  mimeType?: string
-  size?: number
-  assetId?: string
+  sha1hash: string
+  extension: string
+  mimeType: string
+  size: number
+  assetId: string
   uploadId?: string
-  path?: string
-  url?: string
+  path: string
+  url: string
   source?: SanityAssetSourceData
 }
 
@@ -267,14 +312,14 @@ export type SanityImageAsset = {
   title?: string
   description?: string
   altText?: string
-  sha1hash?: string
-  extension?: string
-  mimeType?: string
-  size?: number
-  assetId?: string
+  sha1hash: string
+  extension: string
+  mimeType: string
+  size: number
+  assetId: string
   uploadId?: string
-  path?: string
-  url?: string
+  path: string
+  url: string
   metadata?: SanityImageMetadata
   source?: SanityAssetSourceData
 }
@@ -287,18 +332,21 @@ export type Geopoint = {
 }
 
 export type AllSanitySchemaTypes =
+  | SanityImageAssetReference
+  | PostReference
+  | Homepage
+  | SanityImageCrop
+  | SanityImageHotspot
   | Footer
   | Navbar
-  | SanityImageAssetReference
   | BlockContent
   | Category
   | Slug
   | AuthorReference
   | CategoryReference
   | Post
-  | SanityImageCrop
-  | SanityImageHotspot
   | Author
+  | MediaTag
   | Code
   | SanityImagePaletteSwatch
   | SanityImagePalette
@@ -309,15 +357,222 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint
 
+// Source: src/sanity/lib/queries/article.ts
+// Variable: allPostsQuery
+// Query: *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {      _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }  }
+export type AllPostsQueryResult = Array<{
+  _id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  publishedAt: string
+  mainImage: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: "image"
+  } | null
+  author: {
+    name: string
+    slug: string
+    headline: string | null
+    image: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: "image"
+    } | null
+  }
+  categories: Array<{
+    _id: string
+    title: string
+    slug: string
+  }> | null
+}>
+
+// Source: src/sanity/lib/queries/article.ts
+// Variable: postBySlugQuery
+// Query: *[_type == "post" && slug.current == $slug][0] {      _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  },    body  }
+export type PostBySlugQueryResult = {
+  _id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  publishedAt: string
+  mainImage: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: "image"
+  } | null
+  author: {
+    name: string
+    slug: string
+    headline: string | null
+    image: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: "image"
+    } | null
+  }
+  categories: Array<{
+    _id: string
+    title: string
+    slug: string
+  }> | null
+  body: BlockContent | null
+} | null
+
+// Source: src/sanity/lib/queries/article.ts
+// Variable: postSlugsQuery
+// Query: *[_type == "post" && defined(slug.current)]{ "slug": slug.current }
+export type PostSlugsQueryResult = Array<{
+  slug: string
+}>
+
+// Source: src/sanity/lib/queries/article.ts
+// Variable: authorProfileQuery
+// Query: *[_type == "author"] | order(_createdAt asc)[0] {    name,    headline,    bio,    image,    socials  }
+export type AuthorProfileQueryResult = {
+  name: string
+  headline: string | null
+  bio: string | null
+  image: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: "image"
+  } | null
+  socials: Array<{
+    platform: "email" | "github" | "linkedin" | "twitter" | "website" | "youtube"
+    url: string
+    _type: "social"
+    _key: string
+  }> | null
+} | null
+
+// Source: src/sanity/lib/queries/article.ts
+// Variable: allCategoriesQuery
+// Query: *[_type == "category"] | order(title asc) {    _id,    title,    "slug": slug.current,    "count": count(*[_type == "post" && references(^._id)])  }
+export type AllCategoriesQueryResult = Array<{
+  _id: string
+  title: string
+  slug: string
+  count: number
+}>
+
+// Source: src/sanity/lib/queries/article.ts
+// Variable: homepageDataQuery
+// Query: {    "homepage": *[_type == "homepage" && _id == "homepage"][0] {      heroTitle,      heroTagline,      heroImage,      ctaText,      newsletterTitle,      newsletterDescription,      "featuredPost": featuredPost->{          _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }      }    },    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...6] {        _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }    }  }
+export type HomepageDataQueryResult = {
+  homepage: {
+    heroTitle: string
+    heroTagline: string
+    heroImage: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: "image"
+    } | null
+    ctaText: string | null
+    newsletterTitle: string | null
+    newsletterDescription: string | null
+    featuredPost: {
+      _id: string
+      title: string
+      slug: string
+      excerpt: string | null
+      publishedAt: string
+      mainImage: {
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        alt?: string
+        _type: "image"
+      } | null
+      author: {
+        name: string
+        slug: string
+        headline: string | null
+        image: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          alt?: string
+          _type: "image"
+        } | null
+      }
+      categories: Array<{
+        _id: string
+        title: string
+        slug: string
+      }> | null
+    } | null
+  } | null
+  recentPosts: Array<{
+    _id: string
+    title: string
+    slug: string
+    excerpt: string | null
+    publishedAt: string
+    mainImage: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: "image"
+    } | null
+    author: {
+      name: string
+      slug: string
+      headline: string | null
+      image: {
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        alt?: string
+        _type: "image"
+      } | null
+    }
+    categories: Array<{
+      _id: string
+      title: string
+      slug: string
+    }> | null
+  }>
+}
+
 // Source: src/sanity/lib/queries/layout.ts
 // Variable: navbarQuery
 // Query: *[_type == "navbar"][0] {    brandLogo {      asset->{        url      },      alt    },    brandName,    links[] {      label,      href    },    githubUrl  }
 export type NavbarQueryResult = {
-  brandLogo: null
-  brandName: string | null
+  brandLogo: {
+    asset: {
+      url: string
+    } | null
+    alt: string | null
+  }
+  brandName: null
   links: Array<{
-    label: string | null
-    href: string | null
+    label: string
+    href: string
   }> | null
   githubUrl: string | null
 } | null
@@ -334,6 +589,12 @@ export type FooterQueryResult = {
 import "@sanity/client"
 declare module "@sanity/client" {
   interface SanityQueries {
+    '\n  *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {\n    \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n  }\n': AllPostsQueryResult
+    '\n  *[_type == "post" && slug.current == $slug][0] {\n    \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n,\n    body\n  }\n': PostBySlugQueryResult
+    '\n  *[_type == "post" && defined(slug.current)]{ "slug": slug.current }\n': PostSlugsQueryResult
+    '\n  *[_type == "author"] | order(_createdAt asc)[0] {\n    name,\n    headline,\n    bio,\n    image,\n    socials\n  }\n': AuthorProfileQueryResult
+    '\n  *[_type == "category"] | order(title asc) {\n    _id,\n    title,\n    "slug": slug.current,\n    "count": count(*[_type == "post" && references(^._id)])\n  }\n': AllCategoriesQueryResult
+    '\n  {\n    "homepage": *[_type == "homepage" && _id == "homepage"][0] {\n      heroTitle,\n      heroTagline,\n      heroImage,\n      ctaText,\n      newsletterTitle,\n      newsletterDescription,\n      "featuredPost": featuredPost->{\n        \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n      }\n    },\n    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...6] {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n    }\n  }\n': HomepageDataQueryResult
     '\n  *[_type == "navbar"][0] {\n    brandLogo {\n      asset->{\n        url\n      },\n      alt\n    },\n    brandName,\n    links[] {\n      label,\n      href\n    },\n    githubUrl\n  }\n': NavbarQueryResult
     '\n  *[_type == "footer"][0] {\n    text,\n    githubUrl\n  }\n': FooterQueryResult
   }

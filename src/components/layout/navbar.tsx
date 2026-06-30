@@ -7,16 +7,21 @@ import { Image } from "next-sanity/image";
 export async function Navbar() {
   const { data: navbar } = await sanityFetch({ query: navbarQuery })
 
-  const brandLogo = navbar?.brandLogo || { asset: { url: "/logo.svg" }, alt: "nouwillcode" }
-  const links = navbar?.links || [{ label: "Blog", href: "http://localhost:3000/logo.svg" }]
+  const brandLogo = navbar?.brandLogo
+  const brandAlt = brandLogo?.alt || "nouwillcode"
+  const links = navbar?.links || [{ label: "Blog", href: "/blog" }]
   const githubUrl = navbar?.githubUrl || "https://github.com"
 
   return (
-    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
+    <header className="bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="container mx-auto flex h-14 items-center px-4 md:px-8">
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Image src={brandLogo?.asset.url} alt={brandLogo?.alt || "nouwillcode"} width={170} height={40} />
+            {brandLogo?.asset?.url ? (
+              <Image src={brandLogo.asset.url} alt={brandAlt} width={170} height={40} />
+            ) : (
+              <span className="text-lg font-bold tracking-tight">nouwillcode</span>
+            )}
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             {links.map((link) => (

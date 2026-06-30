@@ -3,13 +3,13 @@ import {defineField, defineType} from 'sanity'
 
 export const authorType = defineType({
   name: 'author',
-  title: 'Auteur',
+  title: 'Author',
   type: 'document',
   icon: UserIcon,
   fields: [
     defineField({
       name: 'name',
-      title: 'Nom complet',
+      title: 'Full name',
       type: 'string',
       validation: (rule) => rule.required(),
     }),
@@ -22,50 +22,50 @@ export const authorType = defineType({
     }),
     defineField({
       name: 'headline',
-      title: 'Titre / Poste',
-      description: 'Ex : Senior Software Engineer · Cloud & DevOps',
+      title: 'Headline / Role',
+      description: 'E.g. Senior Software Engineer · Cloud & DevOps',
       type: 'string',
     }),
     defineField({
       name: 'image',
-      title: 'Photo de profil',
+      title: 'Profile photo',
       type: 'image',
       options: {hotspot: true},
       fields: [
         defineField({
           name: 'alt',
-          title: 'Texte alternatif',
+          title: 'Alt text',
           type: 'string',
         }),
       ],
     }),
     defineField({
       name: 'bio',
-      title: 'Bio courte',
-      description: 'Affichée dans la sidebar (personal branding).',
+      title: 'Short bio',
+      description: 'Displayed in the sidebar (personal branding).',
       type: 'text',
       rows: 4,
     }),
     defineField({
       name: 'socials',
-      title: 'Liens sociaux',
+      title: 'Social links',
       type: 'array',
       of: [
         defineField({
           name: 'social',
-          title: 'Lien',
+          title: 'Link',
           type: 'object',
           fields: [
             defineField({
               name: 'platform',
-              title: 'Plateforme',
+              title: 'Platform',
               type: 'string',
               options: {
                 list: [
                   {title: 'LinkedIn', value: 'linkedin'},
                   {title: 'GitHub', value: 'github'},
                   {title: 'X / Twitter', value: 'twitter'},
-                  {title: 'Site web', value: 'website'},
+                  {title: 'Website', value: 'website'},
                   {title: 'Email', value: 'email'},
                   {title: 'YouTube', value: 'youtube'},
                 ],

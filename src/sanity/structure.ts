@@ -4,11 +4,11 @@ import {DocumentTextIcon, TagIcon, UserIcon, CogIcon} from '@sanity/icons'
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
   S.list()
-    .title('Contenu')
+    .title('Content')
     .items([
-      S.documentTypeListItem('post').title('Articles').icon(DocumentTextIcon),
+      S.documentTypeListItem('post').title('Posts').icon(DocumentTextIcon),
       S.documentTypeListItem('category').title('Tags').icon(TagIcon),
-      S.documentTypeListItem('author').title('Auteurs').icon(UserIcon),
+      S.documentTypeListItem('author').title('Authors').icon(UserIcon),
       S.divider(),
       S.listItem()
         .title('Configuration')
@@ -17,6 +17,13 @@ export const structure: StructureResolver = (S) =>
           S.list()
             .title('Configuration')
             .items([
+              S.listItem()
+                .title('Homepage')
+                .child(
+                  S.document()
+                    .schemaType('homepage')
+                    .documentId('homepage')
+                ),
               S.listItem()
                 .title('Navigation')
                 .child(
@@ -37,6 +44,6 @@ export const structure: StructureResolver = (S) =>
       ...S.documentTypeListItems().filter(
         (item) =>
           item.getId() &&
-          !['post', 'category', 'author', 'navbar', 'footer'].includes(item.getId()!),
+          !['post', 'category', 'author', 'navbar', 'footer', 'homepage'].includes(item.getId()!),
       ),
     ])

@@ -6,5 +6,5 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: false, // ISR / tag-based revalidation : on lit toujours la donnée fraîche
+  useCdn: false, // ISR / tag-based revalidation: always read fresh data
 })

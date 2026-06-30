@@ -2,12 +2,12 @@ import {defineArrayMember, defineType} from 'sanity'
 import {ImageIcon} from '@sanity/icons'
 
 /**
- * Corps d'article en Portable Text : texte riche + blocs de code
- * (via @sanity/code-input) + images. L'auteur choisit dans Sanity
- * d'insérer du texte ou un bloc de code selon le besoin.
+ * Post body as Portable Text: rich text + code blocks
+ * (via @sanity/code-input) + images. The author chooses in Sanity
+ * to insert text or a code block as needed.
  */
 export const blockContentType = defineType({
-  title: 'Contenu',
+  title: 'Content',
   name: 'blockContent',
   type: 'array',
   of: [
@@ -15,25 +15,25 @@ export const blockContentType = defineType({
       type: 'block',
       styles: [
         {title: 'Normal', value: 'normal'},
-        {title: 'Titre H2', value: 'h2'},
-        {title: 'Titre H3', value: 'h3'},
-        {title: 'Titre H4', value: 'h4'},
-        {title: 'Citation', value: 'blockquote'},
+        {title: 'Heading H2', value: 'h2'},
+        {title: 'Heading H3', value: 'h3'},
+        {title: 'Heading H4', value: 'h4'},
+        {title: 'Quote', value: 'blockquote'},
       ],
       lists: [
-        {title: 'Puces', value: 'bullet'},
-        {title: 'Numérotée', value: 'number'},
+        {title: 'Bullet', value: 'bullet'},
+        {title: 'Numbered', value: 'number'},
       ],
       marks: {
         decorators: [
-          {title: 'Gras', value: 'strong'},
-          {title: 'Italique', value: 'em'},
-          {title: 'Code inline', value: 'code'},
-          {title: 'Souligné', value: 'underline'},
+          {title: 'Bold', value: 'strong'},
+          {title: 'Italic', value: 'em'},
+          {title: 'Inline code', value: 'code'},
+          {title: 'Underline', value: 'underline'},
         ],
         annotations: [
           {
-            title: 'Lien',
+            title: 'Link',
             name: 'link',
             type: 'object',
             fields: [
@@ -57,19 +57,19 @@ export const blockContentType = defineType({
         {
           name: 'alt',
           type: 'string',
-          title: 'Texte alternatif',
+          title: 'Alt text',
         },
         {
           name: 'caption',
           type: 'string',
-          title: 'Légende',
+          title: 'Caption',
         },
       ],
     }),
     defineArrayMember({
       type: 'code',
       name: 'code',
-      title: 'Bloc de code',
+      title: 'Code block',
       options: {
         withFilename: true,
         languageAlternatives: [
@@ -88,7 +88,7 @@ export const blockContentType = defineType({
           {title: 'YAML', value: 'yaml'},
           {title: 'Dockerfile', value: 'docker'},
           {title: 'Markdown', value: 'markdown'},
-          {title: 'Texte brut', value: 'text'},
+          {title: 'Plain text', value: 'text'},
         ],
       },
     }),

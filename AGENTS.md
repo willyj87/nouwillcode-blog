@@ -13,7 +13,15 @@ Sanity CMS is used for content management, while Next.js serves as the frontend 
 
 You MUST adhere to the following rules when writing or modifying code in this project:
 
-1. **Language:** English must be used for everything (communication with the user, code comments, variable names, commit messages, etc.).
+1. **Language (English only — no exceptions):** English MUST be used for absolutely everything in this project:
+   - All user-facing / display text (UI labels, buttons, headings, placeholders, toast and error messages, empty states).
+   - All Sanity schema strings (`title`, `description`, `initialValue`, `preview` titles/subtitles) and Studio structure labels.
+   - All code comments and JSDoc.
+   - All identifiers (variable, function, component, and file names).
+   - All commit messages, PR titles/descriptions, and any documentation.
+   - Date/number formatting must use an English locale (e.g. `date-fns` `enUS`), not `fr`.
+   - The root `<html lang>` attribute must be `"en"`.
+   Never introduce French (or any non-English) text. If you find existing non-English text, translate it to English as part of your change.
 2. **React/Next.js Architecture:**
    - Use React Server Components (RSC) by default.
    - Only add the `"use client"` directive when strictly necessary for interactive components (e.g., using state, effects, or event listeners).
