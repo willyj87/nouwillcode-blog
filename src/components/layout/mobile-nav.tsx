@@ -2,14 +2,12 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { MenuIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
@@ -19,13 +17,9 @@ type NavLink = { label: string | null; href: string | null }
 export function MobileNav({
   links,
   githubUrl,
-  brandLogoUrl,
-  brandName,
 }: {
   links: NavLink[]
   githubUrl?: string | null
-  brandLogoUrl?: string | null
-  brandName: string
 }) {
   const [open, setOpen] = useState(false)
 
@@ -41,31 +35,10 @@ export function MobileNav({
           <MenuIcon className="size-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-72">
-        <SheetHeader className="border-b">
-          <SheetTitle asChild>
-            <Link
-              href="/"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2"
-            >
-              {brandLogoUrl ? (
-                <Image
-                  src={brandLogoUrl}
-                  alt={brandName}
-                  width={150}
-                  height={36}
-                />
-              ) : (
-                <span className="text-lg font-bold tracking-tight">
-                  {brandName}
-                </span>
-              )}
-            </Link>
-          </SheetTitle>
-        </SheetHeader>
+      <SheetContent side="right" className="w-72">
+        <SheetTitle className="sr-only">Menu</SheetTitle>
 
-        <nav className="flex flex-col gap-1 px-4">
+        <nav className="flex flex-col gap-1 px-4 pt-4">
           {links.map((link) => (
             <SheetClose asChild key={link.href}>
               <Link
