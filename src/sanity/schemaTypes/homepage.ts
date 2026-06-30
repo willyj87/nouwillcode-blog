@@ -19,24 +19,37 @@ export const homepageType = defineType({
   fields: [
     // Hero Group
     defineField({
+      name: 'featuredPost',
+      title: 'Featured post',
+      type: 'reference',
+      to: [{ type: 'post' }],
+      group: 'hero',
+      description:
+        'The post shown in the hero. Leave empty to feature the most recent post automatically.',
+    }),
+    defineField({
       name: 'heroTitle',
-      title: 'Main title',
+      title: 'Empty-state title',
+      description:
+        'Only shown when there are no posts yet. The hero normally features the selected (or most recent) post.',
       type: 'string',
       group: 'hero',
-      validation: (rule) => rule.required(),
       initialValue: 'nouwillcode',
     }),
     defineField({
       name: 'heroTagline',
-      title: 'Tagline / Short description',
+      title: 'Empty-state tagline',
+      description:
+        'Only shown when there are no posts yet, alongside the empty-state title.',
       type: 'text',
       rows: 3,
       group: 'hero',
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'heroImage',
-      title: 'Hero background image',
+      title: 'Empty-state background image',
+      description:
+        'Optional. Only used by the empty state when there are no posts to feature.',
       type: 'image',
       group: 'hero',
       options: { hotspot: true },
@@ -56,16 +69,9 @@ export const homepageType = defineType({
       ],
     }),
     defineField({
-      name: 'featuredPost',
-      title: 'Featured post',
-      type: 'reference',
-      to: [{ type: 'post' }],
-      group: 'hero',
-      description: 'Select the post to feature in the Hero section.',
-    }),
-    defineField({
       name: 'ctaText',
       title: 'CTA button text',
+      description: 'Used for the "view all posts" button in the posts section.',
       type: 'string',
       group: 'hero',
       initialValue: 'View all posts',

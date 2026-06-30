@@ -37,12 +37,8 @@ export function NewsletterSection({
 
   return (
     <section id="newsletter" className="w-full py-20 px-4 scroll-mt-24">
-      <div className="max-w-4xl mx-auto bg-gradient-to-br from-primary/10 via-background to-secondary rounded-3xl p-8 md:p-16 border shadow-sm relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-secondary/50 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2" />
-        
-        <div className="relative z-10 flex flex-col items-center text-center gap-6">
+      <div className="max-w-4xl mx-auto bg-muted rounded-3xl p-8 md:p-16 border">
+        <div className="flex flex-col items-center text-center gap-6">
           <div className="space-y-3 max-w-2xl">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{heading}</h2>
             <p className="text-lg text-muted-foreground">{subheading}</p>
@@ -58,7 +54,7 @@ export function NewsletterSection({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="rounded-full px-6 h-12 bg-background/80 backdrop-blur-sm"
+              className="rounded-full px-6 h-12 bg-background"
               disabled={isLoading}
             />
             <Button 
