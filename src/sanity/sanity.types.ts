@@ -403,7 +403,7 @@ export type AllPostsQueryResult = Array<{
 
 // Source: src/sanity/lib/queries/article.ts
 // Variable: postBySlugQuery
-// Query: *[_type == "post" && slug.current == $slug][0] {      _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  },    body  }
+// Query: *[_type == "post" && slug.current == $slug][0] {      _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  },    layout,    "primaryCategory": primaryCategory->{      _id,      title,      "slug": slug.current    },    body  }
 export type PostBySlugQueryResult = {
   _id: string
   title: string
@@ -436,6 +436,8 @@ export type PostBySlugQueryResult = {
     title: string
     slug: string
   }> | null
+  layout: null
+  primaryCategory: null
   body: BlockContent | null
 } | null
 
@@ -627,7 +629,7 @@ import "@sanity/client"
 declare module "@sanity/client" {
   interface SanityQueries {
     '\n  *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {\n    \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n  }\n': AllPostsQueryResult
-    '\n  *[_type == "post" && slug.current == $slug][0] {\n    \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n,\n    body\n  }\n': PostBySlugQueryResult
+    '\n  *[_type == "post" && slug.current == $slug][0] {\n    \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n,\n    layout,\n    "primaryCategory": primaryCategory->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    body\n  }\n': PostBySlugQueryResult
     '\n  *[_type == "post" && defined(slug.current)]{ "slug": slug.current }\n': PostSlugsQueryResult
     '\n  *[_type == "author"] | order(_createdAt asc)[0] {\n    name,\n    headline,\n    bio,\n    image,\n    socials\n  }\n': AuthorProfileQueryResult
     '\n  *[_type == "category"] | order(title asc) {\n    _id,\n    title,\n    "slug": slug.current,\n    "count": count(*[_type == "post" && references(^._id)])\n  }\n': AllCategoriesQueryResult

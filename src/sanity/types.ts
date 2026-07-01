@@ -28,6 +28,8 @@ export interface Category {
   count?: number
 }
 
+export type ArticleLayout = 'standard' | 'deepDive' | 'visual'
+
 export interface PostCard {
   _id: string
   title: string
@@ -40,5 +42,7 @@ export interface PostCard {
 }
 
 export interface Post extends PostCard {
+  layout?: ArticleLayout | null
+  primaryCategory?: Category | null
   body?: PortableTextBlock[]
 }

@@ -32,6 +32,12 @@ export const allPostsQuery = defineQuery(`
 export const postBySlugQuery = defineQuery(`
   *[_type == "post" && slug.current == $slug][0] {
     ${postCardFields},
+    layout,
+    "primaryCategory": primaryCategory->{
+      _id,
+      title,
+      "slug": slug.current
+    },
     body
   }
 `)

@@ -3,16 +3,19 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { urlFor } from "@/sanity/lib/image"
 import { formatDate } from "@/lib/format"
-import type { HomepageDataQueryResult } from "@/sanity/sanity.types"
+import type { AllPostsQueryResult, HomepageDataQueryResult } from "@/sanity/sanity.types"
 
-type PostData = HomepageDataQueryResult["recentPosts"][number]
+// Both query result shapes are structurally identical — accept either.
+export type TimelinePostData =
+  | HomepageDataQueryResult["recentPosts"][number]
+  | AllPostsQueryResult[number]
 
 /**
  * Horizontal article entry used inside the post timeline. Image thumbnail
  * left, content right, byline pinned to bottom. No-image posts show a
  * typographic initial rather than a broken placeholder.
  */
-export function TimelinePostCard({ post }: { post: PostData }) {
+export function TimelinePostCard({ post }: { post: TimelinePostData }) {
   const href = `/posts/${post.slug}`
   const initial = (post.title ?? "?").charAt(0).toUpperCase()
 
