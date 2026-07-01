@@ -6,4 +6,9 @@ import { client } from './client'
 
 export const { sanityFetch, SanityLive } = defineLive({
   client,
+  // No auth tokens configured: only published content is fetched and live
+  // events work without drafts. Set these to token strings to enable draft
+  // previewing. `false` silences the missing-token warnings.
+  serverToken: false,
+  browserToken: false,
 });
