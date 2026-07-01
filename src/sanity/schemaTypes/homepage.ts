@@ -12,6 +12,14 @@ export const homepageType = defineType({
       title: 'Hero Section',
     },
     {
+      name: 'topics',
+      title: 'Featured Topics',
+    },
+    {
+      name: 'posts',
+      title: 'Latest Posts',
+    },
+    {
       name: 'newsletter',
       title: 'Newsletter Section',
     },
@@ -75,6 +83,57 @@ export const homepageType = defineType({
       type: 'string',
       group: 'hero',
       initialValue: 'View all posts',
+    }),
+
+    // Featured Topics Group
+    defineField({
+      name: 'featuredTopics',
+      title: 'Featured topics',
+      description:
+        'Pick up to 4 topics to highlight as entry points on the homepage. Order here is the order shown.',
+      type: 'array',
+      group: 'topics',
+      validation: (rule) => rule.max(4),
+      of: [
+        defineField({
+          name: 'featuredTopic',
+          title: 'Topic',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'category',
+              title: 'Tag',
+              type: 'reference',
+              to: [{ type: 'category' }],
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'blurb',
+              title: 'Custom blurb',
+              description:
+                "Optional. A short line describing this topic on the homepage. Falls back to the tag's own description when left empty.",
+              type: 'string',
+              validation: (rule) => rule.max(120),
+            }),
+          ],
+          preview: {
+            select: { title: 'category.title', subtitle: 'blurb' },
+          },
+        }),
+      ],
+    }),
+
+    // Latest Posts Group
+    defineField({
+      name: 'recentPostsCount',
+      title: 'Number of latest posts to show',
+      description:
+        'How many recent posts appear in the "Latest posts" section on the homepage (the hero post is always excluded).',
+      type: 'number',
+      group: 'posts',
+      initialValue: 4,
+      validation: (rule) =>
+        rule.required().integer().min(3).max(8),
     }),
 
     // Newsletter Group

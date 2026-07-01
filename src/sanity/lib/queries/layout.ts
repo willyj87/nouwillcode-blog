@@ -2,13 +2,6 @@ import { defineQuery } from "next-sanity"
 
 export const navbarQuery = defineQuery(`
   *[_type == "navbar"][0] {
-    brandLogo {
-      asset->{
-        url
-      },
-      alt
-    },
-    brandName,
     links[] {
       label,
       href

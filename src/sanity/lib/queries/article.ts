@@ -72,11 +72,22 @@ export const homepageDataQuery = defineQuery(`
       ctaText,
       newsletterTitle,
       newsletterDescription,
+      "recentPostsCount": coalesce(recentPostsCount, 4),
       "featuredPost": featuredPost->{
         ${postCardFields}
+      },
+      "featuredTopics": featuredTopics[]{
+        blurb,
+        "category": category->{
+          _id,
+          title,
+          "slug": slug.current,
+          description,
+          "count": count(*[_type == "post" && references(^._id)])
+        }
       }
     },
-    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...13] {
+    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...8] {
       ${postCardFields}
     },
     "author": *[_type == "author"] | order(_createdAt asc)[0] {

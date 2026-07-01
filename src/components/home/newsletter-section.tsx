@@ -1,10 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
-import { SendIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export function NewsletterSection({
   title,
@@ -17,65 +15,87 @@ export function NewsletterSection({
   const subheading =
     description || "Get the latest posts delivered straight to your inbox."
   const [email, setEmail] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
-
-    setIsLoading(true)
-    
-    // Simulate network request
-    setTimeout(() => {
-      setIsLoading(false)
-      toast.success("Subscription successful!", {
-        description: "Thanks for subscribing to the newsletter.",
-      })
-      setEmail("")
-    }, 1000)
+    // Subscription endpoint would be wired here.
+    setSubmitted(true)
+    toast.success("You're subscribed!", {
+      description: "New posts land in your inbox as they're published.",
+    })
+    setEmail("")
   }
 
   return (
-    <section id="newsletter" className="w-full py-20 px-4 scroll-mt-24">
-      <div className="max-w-4xl mx-auto bg-muted rounded-3xl p-8 md:p-16 border">
-        <div className="flex flex-col items-center text-center gap-6">
-          <div className="space-y-3 max-w-2xl">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{heading}</h2>
-            <p className="text-lg text-muted-foreground">{subheading}</p>
-          </div>
-          
-          <form 
-            onSubmit={handleSubmit} 
-            className="flex w-full max-w-md flex-col sm:flex-row gap-3 mt-4"
-          >
-            <Input
-              type="email"
-              placeholder="you@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="rounded-full px-6 h-12 bg-background"
-              disabled={isLoading}
-            />
-            <Button 
-              type="submit" 
-              className="rounded-full h-12 px-8 min-w-[140px] shadow-md hover:shadow-lg transition-all"
-              disabled={isLoading}
+    <section
+      id="newsletter"
+      aria-labelledby="newsletter-heading"
+      className="w-full scroll-mt-24"
+    >
+      <div className="rounded-2xl border bg-muted/40 p-7 md:p-10">
+        {/* Editorial split on md+: copy left, form right */}
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-16">
+          {/* Copy */}
+          <div className="flex flex-col gap-2">
+            <h2
+              id="newsletter-heading"
+              className="text-xl font-bold tracking-tight md:text-2xl"
             >
-              {isLoading ? (
-                "Subscribing..."
-              ) : (
-                <>
+              {heading}
+            </h2>
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground md:text-base">
+              {subheading}
+            </p>
+          </div>
+
+          {/* Form */}
+          <div className="w-full max-w-sm shrink-0 md:w-auto">
+            {submitted ? (
+              <p className="text-sm font-medium text-primary">
+                ✓ You&apos;re on the list.
+              </p>
+            ) : (
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-2.5 sm:flex-row"
+              >
+                <label htmlFor="newsletter-email" className="sr-only">
+                  Email address
+                </label>
+                <input
+                  id="newsletter-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                  className={cn(
+                    "h-10 flex-1 min-w-0 rounded-full border bg-background px-4 text-sm",
+                    "placeholder:text-muted-foreground/60",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                  )}
+                />
+                <button
+                  type="submit"
+                  className={cn(
+                    "inline-flex h-10 shrink-0 items-center justify-center rounded-full px-5",
+                    "bg-foreground text-background text-sm font-semibold",
+                    "transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                  )}
+                >
                   Subscribe
-                  <SendIcon className="ml-2 h-4 w-4" />
-                </>
-              )}
-            </Button>
-          </form>
-          
-          <p className="text-xs text-muted-foreground mt-2">
-            No spam. Promise. You can unsubscribe at any time.
-          </p>
+                </button>
+              </form>
+            )}
+            {!submitted && (
+              <p className="mt-2 text-[11px] text-muted-foreground/70">
+                No spam. Unsubscribe any time.
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </section>

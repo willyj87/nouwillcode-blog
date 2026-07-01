@@ -6,20 +6,6 @@ export const navbarType = defineType({
   type: "document",
   fields: [
     defineField({
-      name: "brandLogo",
-      title: "Logo",
-      type: "image",
-      validation: (rule) => rule.required(),
-      fields: [
-        defineField({
-          name: "alt",
-          title: "Alt Text",
-          type: "string",
-          initialValue: "nouwillcode",
-        }),
-      ],
-    }),
-    defineField({
       name: "links",
       title: "Navigation Links",
       type: "array",

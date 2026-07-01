@@ -29,6 +29,13 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: "sanity.imageAsset"
 }
 
+export type CategoryReference = {
+  _ref: string
+  _type: "reference"
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: "category"
+}
+
 export type Homepage = {
   _id: string
   _type: "homepage"
@@ -47,24 +54,31 @@ export type Homepage = {
     _type: "image"
   }
   ctaText?: string
+  featuredTopics?: Array<{
+    category: CategoryReference
+    blurb?: string
+    _type: "featuredTopic"
+    _key: string
+  }>
+  recentPostsCount: number
   newsletterTitle?: string
   newsletterDescription?: string
 }
 
 export type SanityImageCrop = {
   _type: "sanity.imageCrop"
-  top?: number
-  bottom?: number
-  left?: number
-  right?: number
+  top: number
+  bottom: number
+  left: number
+  right: number
 }
 
 export type SanityImageHotspot = {
   _type: "sanity.imageHotspot"
-  x?: number
-  y?: number
-  height?: number
-  width?: number
+  x: number
+  y: number
+  height: number
+  width: number
 }
 
 export type Footer = {
@@ -83,7 +97,7 @@ export type Navbar = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  brandLogo?: {
+  brandLogo: {
     asset?: SanityImageAssetReference
     media?: unknown
     hotspot?: SanityImageHotspot
@@ -92,8 +106,8 @@ export type Navbar = {
     _type: "image"
   }
   links?: Array<{
-    label?: string
-    href?: string
+    label: string
+    href: string
     _key: string
   }>
   githubUrl?: string
@@ -139,14 +153,14 @@ export type Category = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  slug?: Slug
+  title: string
+  slug: Slug
   description?: string
 }
 
 export type Slug = {
   _type: "slug"
-  current?: string
+  current: string
   source?: string
 }
 
@@ -157,21 +171,14 @@ export type AuthorReference = {
   [internalGroqTypeReferenceTo]?: "author"
 }
 
-export type CategoryReference = {
-  _ref: string
-  _type: "reference"
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: "category"
-}
-
 export type Post = {
   _id: string
   _type: "post"
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  slug?: Slug
+  title: string
+  slug: Slug
   excerpt?: string
   mainImage?: {
     asset?: SanityImageAssetReference
@@ -181,13 +188,13 @@ export type Post = {
     alt?: string
     _type: "image"
   }
-  author?: AuthorReference
+  author: AuthorReference
   categories?: Array<
     {
       _key: string
     } & CategoryReference
   >
-  publishedAt?: string
+  publishedAt: string
   body?: BlockContent
 }
 
@@ -197,8 +204,8 @@ export type Author = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  name?: string
-  slug?: Slug
+  name: string
+  slug: Slug
   headline?: string
   image?: {
     asset?: SanityImageAssetReference
@@ -210,8 +217,8 @@ export type Author = {
   }
   bio?: string
   socials?: Array<{
-    platform?: "linkedin" | "github" | "twitter" | "website" | "email" | "youtube"
-    url?: string
+    platform: "linkedin" | "github" | "twitter" | "website" | "email" | "youtube"
+    url: string
     _type: "social"
     _key: string
   }>
@@ -255,9 +262,9 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions"
-  height?: number
-  width?: number
-  aspectRatio?: number
+  height: number
+  width: number
+  aspectRatio: number
 }
 
 export type SanityImageMetadata = {
@@ -283,14 +290,14 @@ export type SanityFileAsset = {
   title?: string
   description?: string
   altText?: string
-  sha1hash?: string
-  extension?: string
-  mimeType?: string
-  size?: number
-  assetId?: string
+  sha1hash: string
+  extension: string
+  mimeType: string
+  size: number
+  assetId: string
   uploadId?: string
-  path?: string
-  url?: string
+  path: string
+  url: string
   source?: SanityAssetSourceData
 }
 
@@ -312,14 +319,14 @@ export type SanityImageAsset = {
   title?: string
   description?: string
   altText?: string
-  sha1hash?: string
-  extension?: string
-  mimeType?: string
-  size?: number
-  assetId?: string
+  sha1hash: string
+  extension: string
+  mimeType: string
+  size: number
+  assetId: string
   uploadId?: string
-  path?: string
-  url?: string
+  path: string
+  url: string
   metadata?: SanityImageMetadata
   source?: SanityAssetSourceData
 }
@@ -334,6 +341,7 @@ export type Geopoint = {
 export type AllSanitySchemaTypes =
   | PostReference
   | SanityImageAssetReference
+  | CategoryReference
   | Homepage
   | SanityImageCrop
   | SanityImageHotspot
@@ -343,7 +351,6 @@ export type AllSanitySchemaTypes =
   | Category
   | Slug
   | AuthorReference
-  | CategoryReference
   | Post
   | Author
   | MediaTag
@@ -362,10 +369,10 @@ export type AllSanitySchemaTypes =
 // Query: *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {      _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }  }
 export type AllPostsQueryResult = Array<{
   _id: string
-  title: string | null
-  slug: string | null
+  title: string
+  slug: string
   excerpt: string | null
-  publishedAt: string | null
+  publishedAt: string
   mainImage: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -375,8 +382,8 @@ export type AllPostsQueryResult = Array<{
     _type: "image"
   } | null
   author: {
-    name: string | null
-    slug: string | null
+    name: string
+    slug: string
     headline: string | null
     image: {
       asset?: SanityImageAssetReference
@@ -386,11 +393,11 @@ export type AllPostsQueryResult = Array<{
       alt?: string
       _type: "image"
     } | null
-  } | null
+  }
   categories: Array<{
     _id: string
-    title: string | null
-    slug: string | null
+    title: string
+    slug: string
   }> | null
 }>
 
@@ -399,10 +406,10 @@ export type AllPostsQueryResult = Array<{
 // Query: *[_type == "post" && slug.current == $slug][0] {      _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  },    body  }
 export type PostBySlugQueryResult = {
   _id: string
-  title: string | null
-  slug: string | null
+  title: string
+  slug: string
   excerpt: string | null
-  publishedAt: string | null
+  publishedAt: string
   mainImage: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -412,8 +419,8 @@ export type PostBySlugQueryResult = {
     _type: "image"
   } | null
   author: {
-    name: string | null
-    slug: string | null
+    name: string
+    slug: string
     headline: string | null
     image: {
       asset?: SanityImageAssetReference
@@ -423,11 +430,11 @@ export type PostBySlugQueryResult = {
       alt?: string
       _type: "image"
     } | null
-  } | null
+  }
   categories: Array<{
     _id: string
-    title: string | null
-    slug: string | null
+    title: string
+    slug: string
   }> | null
   body: BlockContent | null
 } | null
@@ -436,14 +443,14 @@ export type PostBySlugQueryResult = {
 // Variable: postSlugsQuery
 // Query: *[_type == "post" && defined(slug.current)]{ "slug": slug.current }
 export type PostSlugsQueryResult = Array<{
-  slug: string | null
+  slug: string
 }>
 
 // Source: src/sanity/lib/queries/article.ts
 // Variable: authorProfileQuery
 // Query: *[_type == "author"] | order(_createdAt asc)[0] {    name,    headline,    bio,    image,    socials  }
 export type AuthorProfileQueryResult = {
-  name: string | null
+  name: string
   headline: string | null
   bio: string | null
   image: {
@@ -455,8 +462,8 @@ export type AuthorProfileQueryResult = {
     _type: "image"
   } | null
   socials: Array<{
-    platform?: "email" | "github" | "linkedin" | "twitter" | "website" | "youtube"
-    url?: string
+    platform: "email" | "github" | "linkedin" | "twitter" | "website" | "youtube"
+    url: string
     _type: "social"
     _key: string
   }> | null
@@ -467,14 +474,14 @@ export type AuthorProfileQueryResult = {
 // Query: *[_type == "category"] | order(title asc) {    _id,    title,    "slug": slug.current,    "count": count(*[_type == "post" && references(^._id)])  }
 export type AllCategoriesQueryResult = Array<{
   _id: string
-  title: string | null
-  slug: string | null
+  title: string
+  slug: string
   count: number
 }>
 
 // Source: src/sanity/lib/queries/article.ts
 // Variable: homepageDataQuery
-// Query: {    "homepage": *[_type == "homepage" && _id == "homepage"][0] {      heroTitle,      heroTagline,      heroImage,      ctaText,      newsletterTitle,      newsletterDescription,      "featuredPost": featuredPost->{          _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }      }    },    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...13] {        _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }    },    "author": *[_type == "author"] | order(_createdAt asc)[0] {      name,      headline,      bio,      image,      socials,      "postCount": count(*[_type == "post" && references(^._id)])    },    "categories": *[_type == "category"] | order(title asc) {      _id,      title,      "slug": slug.current,      "count": count(*[_type == "post" && references(^._id)])    }  }
+// Query: {    "homepage": *[_type == "homepage" && _id == "homepage"][0] {      heroTitle,      heroTagline,      heroImage,      ctaText,      newsletterTitle,      newsletterDescription,      "recentPostsCount": coalesce(recentPostsCount, 4),      "featuredPost": featuredPost->{          _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }      },      "featuredTopics": featuredTopics[]{        blurb,        "category": category->{          _id,          title,          "slug": slug.current,          description,          "count": count(*[_type == "post" && references(^._id)])        }      }    },    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...8] {        _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }    },    "author": *[_type == "author"] | order(_createdAt asc)[0] {      name,      headline,      bio,      image,      socials,      "postCount": count(*[_type == "post" && references(^._id)])    },    "categories": *[_type == "category"] | order(title asc) {      _id,      title,      "slug": slug.current,      "count": count(*[_type == "post" && references(^._id)])    }  }
 export type HomepageDataQueryResult = {
   homepage: {
     heroTitle: string | null
@@ -490,12 +497,13 @@ export type HomepageDataQueryResult = {
     ctaText: string | null
     newsletterTitle: string | null
     newsletterDescription: string | null
+    recentPostsCount: number
     featuredPost: {
       _id: string
-      title: string | null
-      slug: string | null
+      title: string
+      slug: string
       excerpt: string | null
-      publishedAt: string | null
+      publishedAt: string
       mainImage: {
         asset?: SanityImageAssetReference
         media?: unknown
@@ -505,8 +513,8 @@ export type HomepageDataQueryResult = {
         _type: "image"
       } | null
       author: {
-        name: string | null
-        slug: string | null
+        name: string
+        slug: string
         headline: string | null
         image: {
           asset?: SanityImageAssetReference
@@ -516,20 +524,30 @@ export type HomepageDataQueryResult = {
           alt?: string
           _type: "image"
         } | null
-      } | null
+      }
       categories: Array<{
         _id: string
-        title: string | null
-        slug: string | null
+        title: string
+        slug: string
       }> | null
     } | null
+    featuredTopics: Array<{
+      blurb: string | null
+      category: {
+        _id: string
+        title: string
+        slug: string
+        description: string | null
+        count: number
+      }
+    }> | null
   } | null
   recentPosts: Array<{
     _id: string
-    title: string | null
-    slug: string | null
+    title: string
+    slug: string
     excerpt: string | null
-    publishedAt: string | null
+    publishedAt: string
     mainImage: {
       asset?: SanityImageAssetReference
       media?: unknown
@@ -539,8 +557,8 @@ export type HomepageDataQueryResult = {
       _type: "image"
     } | null
     author: {
-      name: string | null
-      slug: string | null
+      name: string
+      slug: string
       headline: string | null
       image: {
         asset?: SanityImageAssetReference
@@ -550,15 +568,15 @@ export type HomepageDataQueryResult = {
         alt?: string
         _type: "image"
       } | null
-    } | null
+    }
     categories: Array<{
       _id: string
-      title: string | null
-      slug: string | null
+      title: string
+      slug: string
     }> | null
   }>
   author: {
-    name: string | null
+    name: string
     headline: string | null
     bio: string | null
     image: {
@@ -570,8 +588,8 @@ export type HomepageDataQueryResult = {
       _type: "image"
     } | null
     socials: Array<{
-      platform?: "email" | "github" | "linkedin" | "twitter" | "website" | "youtube"
-      url?: string
+      platform: "email" | "github" | "linkedin" | "twitter" | "website" | "youtube"
+      url: string
       _type: "social"
       _key: string
     }> | null
@@ -579,26 +597,19 @@ export type HomepageDataQueryResult = {
   } | null
   categories: Array<{
     _id: string
-    title: string | null
-    slug: string | null
+    title: string
+    slug: string
     count: number
   }>
 }
 
 // Source: src/sanity/lib/queries/layout.ts
 // Variable: navbarQuery
-// Query: *[_type == "navbar"][0] {    brandLogo {      asset->{        url      },      alt    },    brandName,    links[] {      label,      href    },    githubUrl  }
+// Query: *[_type == "navbar"][0] {    links[] {      label,      href    },    githubUrl  }
 export type NavbarQueryResult = {
-  brandLogo: {
-    asset: {
-      url: string | null
-    } | null
-    alt: string | null
-  } | null
-  brandName: null
   links: Array<{
-    label: string | null
-    href: string | null
+    label: string
+    href: string
   }> | null
   githubUrl: string | null
 } | null
@@ -620,8 +631,8 @@ declare module "@sanity/client" {
     '\n  *[_type == "post" && defined(slug.current)]{ "slug": slug.current }\n': PostSlugsQueryResult
     '\n  *[_type == "author"] | order(_createdAt asc)[0] {\n    name,\n    headline,\n    bio,\n    image,\n    socials\n  }\n': AuthorProfileQueryResult
     '\n  *[_type == "category"] | order(title asc) {\n    _id,\n    title,\n    "slug": slug.current,\n    "count": count(*[_type == "post" && references(^._id)])\n  }\n': AllCategoriesQueryResult
-    '\n  {\n    "homepage": *[_type == "homepage" && _id == "homepage"][0] {\n      heroTitle,\n      heroTagline,\n      heroImage,\n      ctaText,\n      newsletterTitle,\n      newsletterDescription,\n      "featuredPost": featuredPost->{\n        \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n      }\n    },\n    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...13] {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n    },\n    "author": *[_type == "author"] | order(_createdAt asc)[0] {\n      name,\n      headline,\n      bio,\n      image,\n      socials,\n      "postCount": count(*[_type == "post" && references(^._id)])\n    },\n    "categories": *[_type == "category"] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current,\n      "count": count(*[_type == "post" && references(^._id)])\n    }\n  }\n': HomepageDataQueryResult
-    '\n  *[_type == "navbar"][0] {\n    brandLogo {\n      asset->{\n        url\n      },\n      alt\n    },\n    brandName,\n    links[] {\n      label,\n      href\n    },\n    githubUrl\n  }\n': NavbarQueryResult
+    '\n  {\n    "homepage": *[_type == "homepage" && _id == "homepage"][0] {\n      heroTitle,\n      heroTagline,\n      heroImage,\n      ctaText,\n      newsletterTitle,\n      newsletterDescription,\n      "recentPostsCount": coalesce(recentPostsCount, 4),\n      "featuredPost": featuredPost->{\n        \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n      },\n      "featuredTopics": featuredTopics[]{\n        blurb,\n        "category": category->{\n          _id,\n          title,\n          "slug": slug.current,\n          description,\n          "count": count(*[_type == "post" && references(^._id)])\n        }\n      }\n    },\n    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...8] {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n    },\n    "author": *[_type == "author"] | order(_createdAt asc)[0] {\n      name,\n      headline,\n      bio,\n      image,\n      socials,\n      "postCount": count(*[_type == "post" && references(^._id)])\n    },\n    "categories": *[_type == "category"] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current,\n      "count": count(*[_type == "post" && references(^._id)])\n    }\n  }\n': HomepageDataQueryResult
+    '\n  *[_type == "navbar"][0] {\n    links[] {\n      label,\n      href\n    },\n    githubUrl\n  }\n': NavbarQueryResult
     '\n  *[_type == "footer"][0] {\n    text,\n    githubUrl\n  }\n': FooterQueryResult
   }
 }

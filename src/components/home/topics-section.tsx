@@ -1,62 +1,81 @@
 import Link from "next/link"
 import { ArrowRightIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import type { HomepageDataQueryResult } from "@/sanity/sanity.types"
 
-type Categories = HomepageDataQueryResult["categories"]
+type FeaturedTopics = NonNullable<
+  HomepageDataQueryResult["homepage"]
+>["featuredTopics"]
 
-export function TopicsSection({ categories }: { categories: Categories }) {
-  const topics = (categories ?? []).filter((c) => c.count > 0)
+export function TopicsSection({ topics }: { topics: FeaturedTopics }) {
+  const items = (topics ?? []).filter((t) => t.category)
 
-  if (topics.length === 0) return null
+  if (items.length === 0) return null
 
   return (
     <section aria-labelledby="topics-heading" className="w-full">
-      <div className="mb-6 flex flex-col items-start justify-between gap-2 md:flex-row md:items-end">
-        <div>
-          <h2
-            id="topics-heading"
-            className="text-2xl font-bold tracking-tight md:text-3xl"
-          >
-            Explore by topic
-          </h2>
-          <p className="mt-1.5 text-muted-foreground">
-            Jump straight to what you&apos;re into.
-          </p>
-        </div>
-        <Link
-          href="/blog"
-          className="group inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-        >
-          All articles
-          <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-        </Link>
+      <div className="mb-6 flex flex-col gap-1">
+        <h2 id="topics-heading" className="font-heading text-xl md:text-2xl">
+          Start here
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          A few topics I write about most. Pick one to dive in.
+        </p>
       </div>
 
-      <ul className="flex flex-wrap gap-2.5">
-        {topics.map((topic) => (
-          <li key={topic._id}>
-            <Link
-              href={`/blog?tag=${topic.slug}`}
-              className={cn(
-                "group inline-flex items-center gap-2 rounded-full border px-4 py-2",
-                "text-sm font-medium transition-colors",
-                "hover:border-primary hover:bg-primary hover:text-primary-foreground",
-              )}
-            >
-              <span>{topic.title}</span>
-              <span
+      <ul className="grid gap-4 sm:grid-cols-2">
+        {items.map(({ blurb, category }) => {
+          const description = blurb ?? category.description
+          const postLabel =
+            category.count === 1 ? "1 article" : `${category.count} articles`
+
+          return (
+            <li key={category._id}>
+              <Link
+                href={`/blog?tag=${category.slug}`}
                 className={cn(
-                  "inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5",
-                  "bg-muted text-xs font-semibold tabular-nums text-muted-foreground",
-                  "transition-colors group-hover:bg-primary-foreground/20 group-hover:text-primary-foreground",
+                  "group block h-full rounded-xl",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 )}
               >
-                {topic.count}
-              </span>
-            </Link>
-          </li>
-        ))}
+                <Card
+                  className={cn(
+                    "h-full transition-colors",
+                    "group-hover:ring-primary/40 group-hover:bg-primary/[0.03]",
+                  )}
+                >
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <span>{category.title}</span>
+                      <ArrowRightIcon
+                        className={cn(
+                          "h-4 w-4 text-muted-foreground transition-all",
+                          "group-hover:translate-x-0.5 group-hover:text-primary",
+                        )}
+                        aria-hidden
+                      />
+                    </CardTitle>
+                    {description ? (
+                      <CardDescription>{description}</CardDescription>
+                    ) : null}
+                  </CardHeader>
+                  <CardContent>
+                    <span className="text-xs font-medium tabular-nums text-muted-foreground">
+                      {postLabel}
+                    </span>
+                  </CardContent>
+                </Card>
+              </Link>
+            </li>
+          )
+        })}
       </ul>
     </section>
   )

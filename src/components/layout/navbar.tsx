@@ -2,15 +2,12 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { sanityFetch } from "@/sanity/lib/live"
 import { navbarQuery } from "@/sanity/lib/queries/layout"
-import { Image } from "next-sanity/image"
 import { MobileNav } from "./mobile-nav"
+import { NwLogo } from "./nw-logo"
 
 export async function Navbar() {
   const { data: navbar } = await sanityFetch({ query: navbarQuery })
 
-  const brandLogo = navbar?.brandLogo
-  const brandName = navbar?.brandName || "nouwillcode"
-  const brandAlt = brandLogo?.alt || brandName
   const links = navbar?.links || [{ label: "Blog", href: "/blog" }]
   const githubUrl = navbar?.githubUrl || "https://github.com"
 
@@ -18,15 +15,8 @@ export async function Navbar() {
     <header className="bg-background/95 supports-backdrop-filter:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
       <div className="container mx-auto flex h-14 items-center px-4 md:px-8">
         {/* Mobile: brand on the left */}
-        <Link
-          href="/"
-          className="flex flex-1 items-center md:hidden"
-        >
-          {brandLogo?.asset?.url ? (
-            <Image src={brandLogo.asset.url} alt={brandAlt} width={150} height={36} />
-          ) : (
-            <span className="text-lg font-bold tracking-tight">{brandName}</span>
-          )}
+        <Link href="/" className="flex flex-1 items-center md:hidden">
+          <NwLogo variant="wordmark" height={18} />
         </Link>
 
         {/* Mobile: burger menu on the right */}
@@ -35,11 +25,7 @@ export async function Navbar() {
         {/* Desktop: brand + nav links */}
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            {brandLogo?.asset?.url ? (
-              <Image src={brandLogo.asset.url} alt={brandAlt} width={170} height={40} />
-            ) : (
-              <span className="text-lg font-bold tracking-tight">{brandName}</span>
-            )}
+            <NwLogo variant="wordmark" height={20} />
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             {links.map((link) => (

@@ -13,15 +13,17 @@ export default async function HomePage() {
   const homepage = data?.homepage
   const recentPosts = data?.recentPosts ?? []
   const author = data?.author ?? null
-  const categories = data?.categories ?? []
+  const featuredTopics = homepage?.featuredTopics ?? []
 
   // Featured-led homepage: the hero is the editor-chosen featured post, or the
   // most recent post as a fallback. The slogan only shows when there are no
   // posts at all. The hero post is removed from the grid so it never repeats.
   const heroPost = homepage?.featuredPost ?? recentPosts[0] ?? null
+  // The number of latest posts is editor-controlled via the homepage schema.
+  const recentPostsCount = homepage?.recentPostsCount ?? 4
   const gridPosts = recentPosts
     .filter((post) => post._id !== heroPost?._id)
-    .slice(0, 12)
+    .slice(0, recentPostsCount)
 
   return (
     <div className="flex flex-col gap-16 pb-16 md:gap-24">
@@ -35,7 +37,7 @@ export default async function HomePage() {
         ctaText={homepage?.ctaText}
       />
 
-      <TopicsSection categories={categories} />
+      <TopicsSection topics={featuredTopics} />
 
       <PostTimelineSection posts={gridPosts} ctaText={homepage?.ctaText} />
 
