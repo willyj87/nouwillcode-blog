@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/navbar"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { SanityLive } from "@/sanity/lib/live"
+import { Analytics } from "@vercel/analytics/next"
 
 import "./globals.css"
 
@@ -48,6 +49,7 @@ export default function RootLayout({
           <Footer />
           <Toaster />
           <SanityLive />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
