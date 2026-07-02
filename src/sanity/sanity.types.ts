@@ -97,14 +97,6 @@ export type Navbar = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  brandLogo: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    alt?: string
-    _type: "image"
-  }
   links?: Array<{
     label: string
     href: string
@@ -147,15 +139,28 @@ export type BlockContent = Array<
     } & Code)
 >
 
-export type Category = {
+export type Project = {
   _id: string
-  _type: "category"
+  _type: "project"
   _createdAt: string
   _updatedAt: string
   _rev: string
   title: string
   slug: Slug
-  description?: string
+  description?: BlockContent
+  coverImage?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: "image"
+  }
+  techStack?: Array<string>
+  liveUrl?: string
+  sourceUrl?: string
+  year?: number
+  featured?: boolean
 }
 
 export type Slug = {
@@ -194,8 +199,21 @@ export type Post = {
       _key: string
     } & CategoryReference
   >
+  primaryCategory?: CategoryReference
+  layout?: "standard" | "deepDive" | "visual"
   publishedAt: string
   body?: BlockContent
+}
+
+export type Category = {
+  _id: string
+  _type: "category"
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  slug: Slug
+  description?: string
 }
 
 export type Author = {
@@ -348,10 +366,11 @@ export type AllSanitySchemaTypes =
   | Footer
   | Navbar
   | BlockContent
-  | Category
+  | Project
   | Slug
   | AuthorReference
   | Post
+  | Category
   | Author
   | MediaTag
   | Code
@@ -436,8 +455,12 @@ export type PostBySlugQueryResult = {
     title: string
     slug: string
   }> | null
-  layout: null
-  primaryCategory: null
+  layout: "deepDive" | "standard" | "visual" | null
+  primaryCategory: {
+    _id: string
+    title: string
+    slug: string
+  } | null
   body: BlockContent | null
 } | null
 
@@ -624,6 +647,59 @@ export type FooterQueryResult = {
   githubUrl: string | null
 } | null
 
+// Source: src/sanity/lib/queries/project.ts
+// Variable: allProjectsQuery
+// Query: *[_type == "project" && defined(slug.current)]    | order(coalesce(year, 0) desc, _createdAt desc) {        _id,  title,  "slug": slug.current,  description,  coverImage,  techStack,  liveUrl,  sourceUrl,  year,  featured  }
+export type AllProjectsQueryResult = Array<{
+  _id: string
+  title: string
+  slug: string
+  description: BlockContent | null
+  coverImage: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: "image"
+  } | null
+  techStack: Array<string> | null
+  liveUrl: string | null
+  sourceUrl: string | null
+  year: number | null
+  featured: boolean | null
+}>
+
+// Source: src/sanity/lib/queries/project.ts
+// Variable: projectBySlugQuery
+// Query: *[_type == "project" && slug.current == $slug][0] {      _id,  title,  "slug": slug.current,  description,  coverImage,  techStack,  liveUrl,  sourceUrl,  year,  featured  }
+export type ProjectBySlugQueryResult = {
+  _id: string
+  title: string
+  slug: string
+  description: BlockContent | null
+  coverImage: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: "image"
+  } | null
+  techStack: Array<string> | null
+  liveUrl: string | null
+  sourceUrl: string | null
+  year: number | null
+  featured: boolean | null
+} | null
+
+// Source: src/sanity/lib/queries/project.ts
+// Variable: projectSlugsQuery
+// Query: *[_type == "project" && defined(slug.current)]{ "slug": slug.current }
+export type ProjectSlugsQueryResult = Array<{
+  slug: string
+}>
+
 // Query TypeMap
 import "@sanity/client"
 declare module "@sanity/client" {
@@ -636,5 +712,8 @@ declare module "@sanity/client" {
     '\n  {\n    "homepage": *[_type == "homepage" && _id == "homepage"][0] {\n      heroTitle,\n      heroTagline,\n      heroImage,\n      ctaText,\n      newsletterTitle,\n      newsletterDescription,\n      "recentPostsCount": coalesce(recentPostsCount, 4),\n      "featuredPost": featuredPost->{\n        \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n      },\n      "featuredTopics": featuredTopics[]{\n        blurb,\n        "category": category->{\n          _id,\n          title,\n          "slug": slug.current,\n          description,\n          "count": count(*[_type == "post" && references(^._id)])\n        }\n      }\n    },\n    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...8] {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n    },\n    "author": *[_type == "author"] | order(_createdAt asc)[0] {\n      name,\n      headline,\n      bio,\n      image,\n      socials,\n      "postCount": count(*[_type == "post" && references(^._id)])\n    },\n    "categories": *[_type == "category"] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current,\n      "count": count(*[_type == "post" && references(^._id)])\n    }\n  }\n': HomepageDataQueryResult
     '\n  *[_type == "navbar"][0] {\n    links[] {\n      label,\n      href\n    },\n    githubUrl\n  }\n': NavbarQueryResult
     '\n  *[_type == "footer"][0] {\n    text,\n    githubUrl\n  }\n': FooterQueryResult
+    '\n  *[_type == "project" && defined(slug.current)]\n    | order(coalesce(year, 0) desc, _createdAt desc) {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  coverImage,\n  techStack,\n  liveUrl,\n  sourceUrl,\n  year,\n  featured\n\n  }\n': AllProjectsQueryResult
+    '\n  *[_type == "project" && slug.current == $slug][0] {\n    \n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  coverImage,\n  techStack,\n  liveUrl,\n  sourceUrl,\n  year,\n  featured\n\n  }\n': ProjectBySlugQueryResult
+    '\n  *[_type == "project" && defined(slug.current)]{ "slug": slug.current }\n': ProjectSlugsQueryResult
   }
 }

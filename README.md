@@ -1,34 +1,39 @@
-# nouwillcode — Blog tech
+# nouwillcode — Tech blog
 
-Blog tech & personal branding au style « feed LinkedIn », 100 % front-end (SSG / ISR),
-sans base de données ni backend custom. Le contenu vit entièrement dans **Sanity**.
+LinkedIn-style tech blog and personal branding site, fully frontend (SSG / ISR) with no custom backend. Content is fully managed in **Sanity**.
 
 ## Stack
 
-- **Next.js 16** (App Router) · **React 19** · **TypeScript** strict
-- **Tailwind CSS v4** + composants façon **shadcn/ui**
-- **Sanity v5** — Studio embarqué sur [`/studio`](http://localhost:3000/studio)
-- **GROQ** pour le requêtage · **@portabletext/react** pour le rendu riche
-- **@sanity/code-input** + **Shiki** pour les blocs de code colorés
-- Déploiement cible : **Dokploy**
+- **Next.js 16** (App Router) · **React 19** · **TypeScript** strict mode
+- **Tailwind CSS v4** + **shadcn/ui**-style components
+- **Sanity v5** with embedded Studio at [`/studio`](http://localhost:3000/studio)
+- **GROQ** for querying and **@portabletext/react** for rich content rendering
+- **@sanity/code-input** + **Shiki** for syntax-highlighted code blocks
+- Deployment target: **Vercel**
 
-## Démarrer
+## Start locally
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-- Front : http://localhost:3000
-- Sanity Studio : http://localhost:3000/studio
+- Site: http://localhost:3000
+- Sanity Studio: http://localhost:3000/studio
 
-Crée d'abord un **Auteur**, quelques **Tags**, puis des **Articles** dans le Studio.
+Create an **Author**, a few **Tags**, and then **Posts** in Studio.
 
-## Variables d'environnement
+## Environment variables
 
-Copier `.env.local.example` → `.env.local` (déjà généré par `sanity init`) :
+Copy `.env.local.example` to `.env.local`:
 
+```bash
+cp .env.local.example .env.local
 ```
+
+Required variables:
+
+```bash
 NEXT_PUBLIC_SANITY_PROJECT_ID=...
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2024-10-01
@@ -36,22 +41,22 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-10-01
 
 ## Architecture
 
-```
+```text
 src/
 ├─ app/
-│  ├─ (site)/                  # Site public (header + feed/sidebar)
+│  ├─ (site)/                  # Public site (header + feed/sidebar)
 │  │  ├─ layout.tsx
-│  │  ├─ page.tsx              # Feed des articles (ISR 60s)
-│  │  └─ posts/[slug]/page.tsx # Article (SSG + ISR)
-│  ├─ studio/[[...tool]]/      # Sanity Studio embarqué
+│  │  ├─ page.tsx              # Post feed (ISR 60s)
+│  │  └─ posts/[slug]/page.tsx # Post page (SSG + ISR)
+│  ├─ studio/[[...tool]]/      # Embedded Sanity Studio
 │  └─ layout.tsx               # Root layout (fonts, metadata)
 ├─ components/
-│  ├─ ui/                      # Primitives (card, button, badge, avatar…)
+│  ├─ ui/                      # Primitives (card, button, badge, avatar...)
 │  ├─ feed/post-card.tsx
 │  ├─ layout/                  # site-header, profile-sidebar, tag-list
 │  ├─ portable/                # PortableText + CodeBlock (Shiki)
 │  └─ icons/brand-icons.tsx
-├─ lib/                        # utils (cn), format (date, reading time)
+├─ lib/                        # Helpers (cn), formatting (date, reading time)
 └─ sanity/
    ├─ env.ts
    ├─ lib/                     # client, image (urlFor), queries (GROQ), highlight
@@ -62,14 +67,26 @@ src/
 ## Scripts
 
 ```bash
-pnpm dev      # serveur de dev
-pnpm build    # build de production
-pnpm start    # serveur de production
+pnpm dev      # development server
+pnpm build    # production build
+pnpm start    # production server
 pnpm lint     # ESLint
 ```
 
-## Déploiement (Dokploy)
+## CI/CD to Vercel
 
-Build standard Next.js. Renseigner les 3 variables `NEXT_PUBLIC_SANITY_*`
-dans Dokploy. (Étape suivante : ajouter un `Dockerfile` + `output: 'standalone'`
-dans `next.config.ts`.)
+This repository now includes `.github/workflows/vercel-cicd.yml`:
+
+1. Runs lint + build on `pull_request` and `push` to `main`
+2. Deploys a **preview** build to Vercel after successful CI
+
+Set these GitHub repository secrets before deployment:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+Generate values from your Vercel account:
+
+1. `VERCEL_TOKEN`: create a token in Vercel account settings
+2. `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`: run `vercel link`, then read `.vercel/project.json`

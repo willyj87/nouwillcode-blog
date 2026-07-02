@@ -1,5 +1,5 @@
 import type {StructureResolver} from 'sanity/structure'
-import {DocumentTextIcon, TagIcon, UserIcon, CogIcon} from '@sanity/icons'
+import {DocumentTextIcon, TagIcon, UserIcon, CogIcon, RocketIcon} from '@sanity/icons'
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
@@ -7,6 +7,7 @@ export const structure: StructureResolver = (S) =>
     .title('Content')
     .items([
       S.documentTypeListItem('post').title('Posts').icon(DocumentTextIcon),
+      S.documentTypeListItem('project').title('Projects').icon(RocketIcon),
       S.documentTypeListItem('category').title('Tags').icon(TagIcon),
       S.documentTypeListItem('author').title('Authors').icon(UserIcon),
       S.divider(),
@@ -44,6 +45,6 @@ export const structure: StructureResolver = (S) =>
       ...S.documentTypeListItems().filter(
         (item) =>
           item.getId() &&
-          !['post', 'category', 'author', 'navbar', 'footer', 'homepage'].includes(item.getId()!),
+          !['post', 'project', 'category', 'author', 'navbar', 'footer', 'homepage'].includes(item.getId()!),
       ),
     ])

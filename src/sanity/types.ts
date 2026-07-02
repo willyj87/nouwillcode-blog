@@ -46,3 +46,16 @@ export interface Post extends PostCard {
   primaryCategory?: Category | null
   body?: PortableTextBlock[]
 }
+
+export interface Project {
+  _id: string
+  title: string
+  slug: string
+  description?: string
+  coverImage?: Image & {alt?: string}
+  techStack?: string[]
+  liveUrl?: string
+  sourceUrl?: string
+  year?: number
+  featured?: boolean
+}

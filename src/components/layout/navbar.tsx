@@ -4,6 +4,7 @@ import { sanityFetch } from "@/sanity/lib/live"
 import { navbarQuery } from "@/sanity/lib/queries/layout"
 import { MobileNav } from "./mobile-nav"
 import { NwLogo } from "./nw-logo"
+import { ThemeToggle } from "./theme-toggle"
 
 export async function Navbar() {
   const { data: navbar } = await sanityFetch({ query: navbarQuery })
@@ -41,19 +42,19 @@ export async function Navbar() {
         </div>
 
         <div className="flex items-center justify-end space-x-2 md:flex-1">
-          <nav className="flex items-center">
+          <nav className="hidden items-center gap-1 md:flex">
             {githubUrl && (
               <Button
                 variant="ghost"
                 size="sm"
                 asChild
-                className="hidden md:inline-flex"
               >
                 <Link href={githubUrl} target="_blank" rel="noreferrer">
                   GitHub
                 </Link>
               </Button>
             )}
+            <ThemeToggle />
           </nav>
         </div>
       </div>
