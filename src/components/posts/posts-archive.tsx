@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { formatDate } from "@/lib/format"
 import type { AllPostsQueryResult, AllCategoriesQueryResult } from "@/sanity/sanity.types"
 import { FeaturedPost } from "./featured-post"
@@ -26,6 +26,15 @@ export function PostsArchive({ posts, categories }: PostsArchiveProps) {
   const [currentPage, setCurrentPage] = useState(1)
 
   const isFiltering = search.trim().length > 0 || activeCategory !== null
+
+  // Reset pagination when the active filter changes, adjusting state during
+  // render instead of in an effect to avoid cascading re-renders.
+  const filterKey = `${search}|${activeCategory ?? ""}`
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey)
+  if (prevFilterKey !== filterKey) {
+    setPrevFilterKey(filterKey)
+    setCurrentPage(1)
+  }
 
   /** All posts filtered by search and/or category. */
   const filteredPosts = useMemo(() => {
@@ -58,21 +67,15 @@ export function PostsArchive({ posts, categories }: PostsArchiveProps) {
 
   const totalPages = Math.max(1, Math.ceil(streamSourcePosts.length / POSTS_PER_PAGE))
 
+  // Clamp the page during render so it never exceeds the available pages
+  // (e.g. after the source list shrinks) without a state-syncing effect.
+  const safePage = Math.min(currentPage, totalPages)
+
   const streamPosts = useMemo(() => {
-    const start = (currentPage - 1) * POSTS_PER_PAGE
+    const start = (safePage - 1) * POSTS_PER_PAGE
     const end = start + POSTS_PER_PAGE
     return streamSourcePosts.slice(start, end)
-  }, [currentPage, streamSourcePosts])
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [search, activeCategory])
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages)
-    }
-  }, [currentPage, totalPages])
+  }, [safePage, streamSourcePosts])
 
   return (
     <div className="flex flex-col gap-12">
@@ -160,8 +163,8 @@ export function PostsArchive({ posts, categories }: PostsArchiveProps) {
             >
               <button
                 type="button"
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(Math.max(1, safePage - 1))}
+                disabled={safePage === 1}
                 className="inline-flex h-9 items-center rounded-full border px-4 text-sm font-medium transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-45"
               >
                 Previous
@@ -169,7 +172,7 @@ export function PostsArchive({ posts, categories }: PostsArchiveProps) {
 
               <div className="flex flex-wrap items-center gap-1">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                  const isActive = page === currentPage
+                  const isActive = page === safePage
                   return (
                     <button
                       key={page}
@@ -190,8 +193,8 @@ export function PostsArchive({ posts, categories }: PostsArchiveProps) {
 
               <button
                 type="button"
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(Math.min(totalPages, safePage + 1))}
+                disabled={safePage === totalPages}
                 className="inline-flex h-9 items-center rounded-full border px-4 text-sm font-medium transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-45"
               >
                 Next

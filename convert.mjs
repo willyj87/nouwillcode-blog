@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 
 (async () => {
   const browser = await puppeteer.launch();
