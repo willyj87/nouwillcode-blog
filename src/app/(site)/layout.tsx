@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { SanityLive } from "@/sanity/lib/live"
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import "./globals.css"
 
@@ -50,6 +51,7 @@ export default function RootLayout({
           <Toaster />
           <SanityLive />
           <Analytics />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>

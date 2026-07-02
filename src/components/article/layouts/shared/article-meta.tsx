@@ -1,6 +1,7 @@
 import type {PortableTextBlock} from '@portabletext/react'
 import Image from 'next/image'
 
+import {ShareButtons} from '@/components/article/share-buttons'
 import {Badge} from '@/components/ui/badge'
 import {formatDate, readingLabel} from '@/lib/format'
 import {cn} from '@/lib/utils'
@@ -61,6 +62,8 @@ export function ArticleMeta({post, body, className}: ArticleMetaProps) {
           </span>
         </div>
       </div>
+
+      <ShareButtons slug={post.slug} title={post.title} className="pt-1" />
     </aside>
   )
 }

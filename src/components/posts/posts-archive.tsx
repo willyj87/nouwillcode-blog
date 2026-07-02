@@ -1,7 +1,8 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { formatDate } from "@/lib/format"
+import { track } from "@/lib/analytics"
 import type { AllPostsQueryResult, AllCategoriesQueryResult } from "@/sanity/sanity.types"
 import { FeaturedPost } from "./featured-post"
 import { PostsDiscoveryBar } from "./posts-discovery-bar"
@@ -9,6 +10,7 @@ import { TimelinePostCard } from "@/components/home/timeline-post-card"
 
 const FEATURED_COUNT = 3
 const POSTS_PER_PAGE = 8
+const SEARCH_TRACK_DELAY = 500
 
 interface PostsArchiveProps {
   posts: AllPostsQueryResult
@@ -77,6 +79,33 @@ export function PostsArchive({ posts, categories }: PostsArchiveProps) {
     return streamSourcePosts.slice(start, end)
   }, [safePage, streamSourcePosts])
 
+  // Keep the latest result count in a ref so the debounced search-tracking
+  // effect can read it without re-subscribing on every filter recompute.
+  const filteredCountRef = useRef(filteredPosts.length)
+  useEffect(() => {
+    filteredCountRef.current = filteredPosts.length
+  }, [filteredPosts.length])
+
+  // Track searches, debounced, so we log intent (not every keystroke) and
+  // never send high-cardinality raw queries without normalising them first.
+  useEffect(() => {
+    const query = search.trim().toLowerCase()
+    if (!query) return
+    const timer = window.setTimeout(() => {
+      track("posts_search", {
+        query,
+        length: query.length,
+        results: filteredCountRef.current,
+      })
+    }, SEARCH_TRACK_DELAY)
+    return () => window.clearTimeout(timer)
+  }, [search])
+
+  const handleCategoryChange = useCallback((category: string | null) => {
+    setActiveCategory(category)
+    track("posts_filter", { category: category ?? "all" })
+  }, [])
+
   return (
     <div className="flex flex-col gap-12">
       {/* ── Discovery bar ── */}
@@ -87,7 +116,7 @@ export function PostsArchive({ posts, categories }: PostsArchiveProps) {
         totalCount={posts.length}
         filteredCount={filteredPosts.length}
         onSearchChange={setSearch}
-        onCategoryChange={setActiveCategory}
+        onCategoryChange={handleCategoryChange}
       />
 
       {/* ── Featured band — suppressed while filtering ── */}
@@ -213,7 +242,7 @@ export function PostsArchive({ posts, categories }: PostsArchiveProps) {
               className="font-medium text-primary underline-offset-4 hover:underline"
               onClick={() => {
                 setSearch("")
-                setActiveCategory(null)
+                handleCategoryChange(null)
               }}
             >
               clear the filter
