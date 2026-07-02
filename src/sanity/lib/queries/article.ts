@@ -21,6 +21,18 @@ const postCardFields = /* groq */ `
   }
 `
 
+/** Compact fields for homepage project previews. */
+const projectPreviewFields = /* groq */ `
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  coverImage,
+  liveUrl,
+  sourceUrl,
+  year
+`
+
 /** List of posts for the feed, newest first. */
 export const allPostsQuery = defineQuery(`
   *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
@@ -95,6 +107,9 @@ export const homepageDataQuery = defineQuery(`
     },
     "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...8] {
       ${postCardFields}
+    },
+    "recentProjects": *[_type == "project" && defined(slug.current)] | order(coalesce(year, 0) desc, _createdAt desc)[0...3] {
+      ${projectPreviewFields}
     },
     "author": *[_type == "author"] | order(_createdAt asc)[0] {
       name,

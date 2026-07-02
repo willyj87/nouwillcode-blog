@@ -20,31 +20,31 @@ colors:
   dark-muted-foreground: "oklch(0.72 0.012 277)"
 typography:
   display:
-    fontFamily: "Outfit, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Manrope, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(2rem, 5vw, 3.75rem)"
     fontWeight: 700
     lineHeight: 1.05
     letterSpacing: "-0.02em"
   headline:
-    fontFamily: "Outfit, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Manrope, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(1.5rem, 3vw, 3rem)"
     fontWeight: 700
     lineHeight: 1.1
     letterSpacing: "-0.015em"
   title:
-    fontFamily: "Outfit, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Manrope, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1rem"
     fontWeight: 500
     lineHeight: 1.375
     letterSpacing: "normal"
   body:
-    fontFamily: "Outfit, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Manrope, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1.125rem"
     fontWeight: 400
     lineHeight: 1.7
     letterSpacing: "normal"
   label:
-    fontFamily: "Outfit, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Manrope, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 600
     lineHeight: 1.25
@@ -140,12 +140,30 @@ The palette is **monochrome ink on a clean canvas, with one committed indigo sig
 
 Two families on a clear contrast axis, no reflexive pairing:
 
-- **Outfit** (geometric sans) for everything structural — display, headings, titles, body, and labels. Body runs at `1.125rem / 1.7` for comfortable long-form reading; measure is capped at **65–75ch**.
+- **Manrope** (precise neo-grotesk sans) for everything structural — display, headings, titles, body, and labels. Body runs at `1.125rem / 1.7` for comfortable long-form reading; measure is capped at **65–75ch**.
 - **JetBrains Mono** for code only. Mono is reserved for what is literally code — never as decorative "developer" costume in UI chrome.
 
 Headings use a committed modular scale with fluid `clamp()`, tight tracking (`-0.02em` on display, easing toward `normal` at body sizes), and `text-wrap: balance` on h1–h3. Display max stays ≤ `3.75rem` — confident, not shouting. Prose uses `text-wrap: pretty` to reduce orphans. On dark backgrounds, add 0.05–0.1 to line-height to compensate for lighter-reading type.
 
-> Note: `--font-heading` currently maps to the same family as `--font-sans` (Outfit). If a display face is ever introduced for headings, it belongs here — pair on a real contrast axis (serif + this geometric sans), never two similar sans-serifs.
+> Note: `--font-heading` currently maps to the same family as `--font-sans` (Manrope). If a display face is ever introduced for headings, it belongs here — pair on a real contrast axis (serif + this neo-grotesk sans), never two similar sans-serifs.
+
+### Logo typesetting and font policy
+
+The `nouwillcode_` wordmark is a typographic lockup, so it follows stricter rules than regular UI copy:
+
+- **Wordmark source:** use the `NwLogo` typographic component as the single source of truth.
+- **Wordmark typeface:** Avenir Next / Avenir (local stack) at semibold weight.
+- **Wordmark color rule:** render `nouwillcode` in `currentColor`; render the trailing `_` in `--brand`.
+- **Wordmark spacing:** preserve the built-in optical kerning; do not manually stretch, condense, or letter-space logo glyphs in CSS.
+- **Wordmark usage:** use `wordmark` in navigation and editorial headers; use `mark` (`nw_`) only in compact surfaces.
+
+Global font policy for the product:
+
+- **Primary UI and reading font:** Manrope (`--font-sans` / `--font-heading`).
+- **Code-only font:** JetBrains Mono (`--font-mono`) for code blocks, inline code, and code-adjacent technical tokens.
+- **No ad-hoc font additions:** do not introduce additional families without updating this document and validating hierarchy, loading cost, and brand fit.
+- **Weight discipline:** prefer 400 / 500 / 700 roles; avoid one-off weights that blur hierarchy.
+- **Performance rule:** load only used subsets and weights via Next font loaders; avoid duplicate imports.
 
 ## Elevation
 

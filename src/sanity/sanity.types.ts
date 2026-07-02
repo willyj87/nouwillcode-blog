@@ -506,7 +506,7 @@ export type AllCategoriesQueryResult = Array<{
 
 // Source: src/sanity/lib/queries/article.ts
 // Variable: homepageDataQuery
-// Query: {    "homepage": *[_type == "homepage" && _id == "homepage"][0] {      heroTitle,      heroTagline,      heroImage,      ctaText,      newsletterTitle,      newsletterDescription,      "recentPostsCount": coalesce(recentPostsCount, 4),      "featuredPost": featuredPost->{          _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }      },      "featuredTopics": featuredTopics[]{        blurb,        "category": category->{          _id,          title,          "slug": slug.current,          description,          "count": count(*[_type == "post" && references(^._id)])        }      }    },    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...8] {        _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }    },    "author": *[_type == "author"] | order(_createdAt asc)[0] {      name,      headline,      bio,      image,      socials,      "postCount": count(*[_type == "post" && references(^._id)])    },    "categories": *[_type == "category"] | order(title asc) {      _id,      title,      "slug": slug.current,      "count": count(*[_type == "post" && references(^._id)])    }  }
+// Query: {    "homepage": *[_type == "homepage" && _id == "homepage"][0] {      heroTitle,      heroTagline,      heroImage,      ctaText,      newsletterTitle,      newsletterDescription,      "recentPostsCount": coalesce(recentPostsCount, 4),      "featuredPost": featuredPost->{          _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }      },      "featuredTopics": featuredTopics[]{        blurb,        "category": category->{          _id,          title,          "slug": slug.current,          description,          "count": count(*[_type == "post" && references(^._id)])        }      }    },    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...8] {        _id,  title,  "slug": slug.current,  excerpt,  publishedAt,  mainImage,  "author": author->{    name,    "slug": slug.current,    headline,    image  },  "categories": categories[]->{    _id,    title,    "slug": slug.current  }    },    "recentProjects": *[_type == "project" && defined(slug.current)] | order(coalesce(year, 0) desc, _createdAt desc)[0...3] {        _id,  title,  "slug": slug.current,  description,  coverImage,  liveUrl,  sourceUrl,  year    },    "author": *[_type == "author"] | order(_createdAt asc)[0] {      name,      headline,      bio,      image,      socials,      "postCount": count(*[_type == "post" && references(^._id)])    },    "categories": *[_type == "category"] | order(title asc) {      _id,      title,      "slug": slug.current,      "count": count(*[_type == "post" && references(^._id)])    }  }
 export type HomepageDataQueryResult = {
   homepage: {
     heroTitle: string | null
@@ -600,6 +600,23 @@ export type HomepageDataQueryResult = {
       slug: string
     }> | null
   }>
+  recentProjects: Array<{
+    _id: string
+    title: string
+    slug: string
+    description: BlockContent | null
+    coverImage: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: "image"
+    } | null
+    liveUrl: string | null
+    sourceUrl: string | null
+    year: number | null
+  }>
   author: {
     name: string
     headline: string | null
@@ -671,6 +688,34 @@ export type AllProjectsQueryResult = Array<{
 }>
 
 // Source: src/sanity/lib/queries/project.ts
+// Variable: filteredProjectsCountQuery
+// Query: count(*[    _type == "project" &&    defined(slug.current) &&    ($search == "" || title match $search || slug.current match $search)  ])
+export type FilteredProjectsCountQueryResult = number
+
+// Source: src/sanity/lib/queries/project.ts
+// Variable: filteredProjectsQuery
+// Query: *[    _type == "project" &&    defined(slug.current) &&    ($search == "" || title match $search || slug.current match $search)  ]    | order(coalesce(year, 0) desc, _createdAt desc)[$start...$end] {        _id,  title,  "slug": slug.current,  description,  coverImage,  techStack,  liveUrl,  sourceUrl,  year,  featured  }
+export type FilteredProjectsQueryResult = Array<{
+  _id: string
+  title: string
+  slug: string
+  description: BlockContent | null
+  coverImage: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: "image"
+  } | null
+  techStack: Array<string> | null
+  liveUrl: string | null
+  sourceUrl: string | null
+  year: number | null
+  featured: boolean | null
+}>
+
+// Source: src/sanity/lib/queries/project.ts
 // Variable: projectBySlugQuery
 // Query: *[_type == "project" && slug.current == $slug][0] {      _id,  title,  "slug": slug.current,  description,  coverImage,  techStack,  liveUrl,  sourceUrl,  year,  featured  }
 export type ProjectBySlugQueryResult = {
@@ -709,10 +754,12 @@ declare module "@sanity/client" {
     '\n  *[_type == "post" && defined(slug.current)]{ "slug": slug.current }\n': PostSlugsQueryResult
     '\n  *[_type == "author"] | order(_createdAt asc)[0] {\n    name,\n    headline,\n    bio,\n    image,\n    socials\n  }\n': AuthorProfileQueryResult
     '\n  *[_type == "category"] | order(title asc) {\n    _id,\n    title,\n    "slug": slug.current,\n    "count": count(*[_type == "post" && references(^._id)])\n  }\n': AllCategoriesQueryResult
-    '\n  {\n    "homepage": *[_type == "homepage" && _id == "homepage"][0] {\n      heroTitle,\n      heroTagline,\n      heroImage,\n      ctaText,\n      newsletterTitle,\n      newsletterDescription,\n      "recentPostsCount": coalesce(recentPostsCount, 4),\n      "featuredPost": featuredPost->{\n        \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n      },\n      "featuredTopics": featuredTopics[]{\n        blurb,\n        "category": category->{\n          _id,\n          title,\n          "slug": slug.current,\n          description,\n          "count": count(*[_type == "post" && references(^._id)])\n        }\n      }\n    },\n    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...8] {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n    },\n    "author": *[_type == "author"] | order(_createdAt asc)[0] {\n      name,\n      headline,\n      bio,\n      image,\n      socials,\n      "postCount": count(*[_type == "post" && references(^._id)])\n    },\n    "categories": *[_type == "category"] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current,\n      "count": count(*[_type == "post" && references(^._id)])\n    }\n  }\n': HomepageDataQueryResult
+    '\n  {\n    "homepage": *[_type == "homepage" && _id == "homepage"][0] {\n      heroTitle,\n      heroTagline,\n      heroImage,\n      ctaText,\n      newsletterTitle,\n      newsletterDescription,\n      "recentPostsCount": coalesce(recentPostsCount, 4),\n      "featuredPost": featuredPost->{\n        \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n      },\n      "featuredTopics": featuredTopics[]{\n        blurb,\n        "category": category->{\n          _id,\n          title,\n          "slug": slug.current,\n          description,\n          "count": count(*[_type == "post" && references(^._id)])\n        }\n      }\n    },\n    "recentPosts": *[_type == "post" && defined(slug.current) && _id != *[_type == "homepage" && _id == "homepage"][0].featuredPost._ref] | order(publishedAt desc)[0...8] {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  excerpt,\n  publishedAt,\n  mainImage,\n  "author": author->{\n    name,\n    "slug": slug.current,\n    headline,\n    image\n  },\n  "categories": categories[]->{\n    _id,\n    title,\n    "slug": slug.current\n  }\n\n    },\n    "recentProjects": *[_type == "project" && defined(slug.current)] | order(coalesce(year, 0) desc, _createdAt desc)[0...3] {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  coverImage,\n  liveUrl,\n  sourceUrl,\n  year\n\n    },\n    "author": *[_type == "author"] | order(_createdAt asc)[0] {\n      name,\n      headline,\n      bio,\n      image,\n      socials,\n      "postCount": count(*[_type == "post" && references(^._id)])\n    },\n    "categories": *[_type == "category"] | order(title asc) {\n      _id,\n      title,\n      "slug": slug.current,\n      "count": count(*[_type == "post" && references(^._id)])\n    }\n  }\n': HomepageDataQueryResult
     '\n  *[_type == "navbar"][0] {\n    links[] {\n      label,\n      href\n    },\n    githubUrl\n  }\n': NavbarQueryResult
     '\n  *[_type == "footer"][0] {\n    text,\n    githubUrl\n  }\n': FooterQueryResult
     '\n  *[_type == "project" && defined(slug.current)]\n    | order(coalesce(year, 0) desc, _createdAt desc) {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  coverImage,\n  techStack,\n  liveUrl,\n  sourceUrl,\n  year,\n  featured\n\n  }\n': AllProjectsQueryResult
+    '\n  count(*[\n    _type == "project" &&\n    defined(slug.current) &&\n    ($search == "" || title match $search || slug.current match $search)\n  ])\n': FilteredProjectsCountQueryResult
+    '\n  *[\n    _type == "project" &&\n    defined(slug.current) &&\n    ($search == "" || title match $search || slug.current match $search)\n  ]\n    | order(coalesce(year, 0) desc, _createdAt desc)[$start...$end] {\n      \n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  coverImage,\n  techStack,\n  liveUrl,\n  sourceUrl,\n  year,\n  featured\n\n  }\n': FilteredProjectsQueryResult
     '\n  *[_type == "project" && slug.current == $slug][0] {\n    \n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  coverImage,\n  techStack,\n  liveUrl,\n  sourceUrl,\n  year,\n  featured\n\n  }\n': ProjectBySlugQueryResult
     '\n  *[_type == "project" && defined(slug.current)]{ "slug": slug.current }\n': ProjectSlugsQueryResult
   }

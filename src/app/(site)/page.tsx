@@ -3,6 +3,7 @@ import { homepageDataQuery } from "@/sanity/lib/queries/article"
 import { HeroSection } from "@/components/home/hero-section"
 import { TopicsSection } from "@/components/home/topics-section"
 import { PostTimelineSection } from "@/components/home/post-timeline-section"
+import { ProjectsPreviewSection } from "@/components/home/projects-preview-section"
 import { AuthorIntroSection } from "@/components/home/author-intro-section"
 import { NewsletterSection } from "@/components/home/newsletter-section"
 
@@ -12,6 +13,7 @@ export default async function HomePage() {
 
   const homepage = data?.homepage
   const recentPosts = data?.recentPosts ?? []
+  const recentProjects = data?.recentProjects ?? []
   const author = data?.author ?? null
   const featuredTopics = homepage?.featuredTopics ?? []
 
@@ -40,6 +42,8 @@ export default async function HomePage() {
       <TopicsSection topics={featuredTopics} />
 
       <PostTimelineSection posts={gridPosts} ctaText={homepage?.ctaText} />
+
+      <ProjectsPreviewSection projects={recentProjects} />
 
       <AuthorIntroSection author={author} />
 

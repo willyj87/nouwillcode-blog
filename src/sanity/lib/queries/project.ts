@@ -22,6 +22,27 @@ export const allProjectsQuery = defineQuery(`
   }
 `)
 
+/** Count projects for the `/projects` search. */
+export const filteredProjectsCountQuery = defineQuery(`
+  count(*[
+    _type == "project" &&
+    defined(slug.current) &&
+    ($search == "" || title match $search || slug.current match $search)
+  ])
+`)
+
+/** Paginated projects list for the `/projects` page search and pagination. */
+export const filteredProjectsQuery = defineQuery(`
+  *[
+    _type == "project" &&
+    defined(slug.current) &&
+    ($search == "" || title match $search || slug.current match $search)
+  ]
+    | order(coalesce(year, 0) desc, _createdAt desc)[$start...$end] {
+      ${projectCardFields}
+  }
+`)
+
 /** A single project by its slug. */
 export const projectBySlugQuery = defineQuery(`
   *[_type == "project" && slug.current == $slug][0] {

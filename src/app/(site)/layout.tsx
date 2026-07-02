@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { JetBrains_Mono, Outfit } from "next/font/google"
+import { JetBrains_Mono, Manrope } from "next/font/google"
 
 import { Footer } from "@/components/layout/footer"
 import { Navbar } from "@/components/layout/navbar"
@@ -9,7 +9,7 @@ import { SanityLive } from "@/sanity/lib/live"
 
 import "./globals.css"
 
-const outfit = Outfit({
+const manrope = Manrope({
   variable: "--font-sans",
   subsets: ["latin"],
 })
@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${jetBrainsMono.variable} antialiased`}
+      className={`${manrope.variable} ${jetBrainsMono.variable} antialiased`}
       suppressHydrationWarning
     >
       <body className="flex min-h-screen flex-col font-sans bg-background text-foreground">
