@@ -78,15 +78,27 @@ body {
 /* Shiki code blocks */
 .shiki {
   border-radius: var(--radius-md);
-  padding: 1rem 1.15rem;
+  padding: 0.875rem 1rem;
   font-size: 0.85rem;
   line-height: 1.6;
+  max-width: 100%;
   overflow-x: auto;
-  border: 1px solid #1f2937;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid color-mix(in oklab, var(--foreground) 16%, transparent);
 }
 .shiki code {
-  display: grid;
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  white-space: pre;
   font-family: var(--font-mono), monospace;
+}
+
+@media (min-width: 640px) {
+  .shiki {
+    padding: 1rem 1.15rem;
+  }
 }
 
 :root {
