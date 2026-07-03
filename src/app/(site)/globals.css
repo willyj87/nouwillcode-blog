@@ -85,6 +85,7 @@ body {
   overflow-x: auto;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--border);
   border: 1px solid color-mix(in oklab, var(--foreground) 16%, transparent);
 }
 .shiki code {

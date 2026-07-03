@@ -20,7 +20,7 @@ export async function CodeBlock({ value }: { value: CodeValue }) {
         </figcaption>
       ) : null}
       <div
-        className="text-sm [&_.shiki]:!m-0 [&_.shiki]:!bg-transparent [&_.shiki]:!p-0 [&_.shiki]:!border-0 [&_pre]:overflow-x-auto [&_pre]:max-w-full [&_pre]:[-webkit-overflow-scrolling:touch]"
+        className="text-sm [&_.shiki]:m-0! [&_.shiki]:bg-transparent! [&_.shiki]:p-0! [&_.shiki]:border-0!"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </figure>
