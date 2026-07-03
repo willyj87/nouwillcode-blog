@@ -42,12 +42,22 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Build
-        run: pnpm build
+      - name: Build (Vercel)
         env:
-          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
-          NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
-          NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            VERCEL_ENV=preview
+            VERCEL_BUILD_FLAGS=""
+          else
+            VERCEL_ENV=production
+            VERCEL_BUILD_FLAGS="--prod"
+          fi
+
+          npx vercel pull --yes --environment="$VERCEL_ENV" --token="$VERCEL_TOKEN"
+          npx vercel build $VERCEL_BUILD_FLAGS --token="$VERCEL_TOKEN"
 
   deploy-preview:
     name: Deploy preview to Vercel
@@ -62,6 +72,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.18.0
+          cache: pnpm
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -83,11 +105,23 @@ jobs:
     environment: production
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.18.0
+          cache: pnpm
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
