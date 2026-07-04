@@ -19,8 +19,11 @@ export async function CodeBlock({ value }: { value: CodeValue }) {
           <span className="truncate">{value.filename}</span>
         </figcaption>
       ) : null}
+      {/* .code-scroll owns horizontal scroll behavior.
+          The layout now constrains article width with min-w-0, so long lines
+          scroll inside this wrapper while figure overflow clips rounded corners. */}
       <div
-        className="text-sm [&_.shiki]:m-0! [&_.shiki]:bg-transparent! [&_.shiki]:p-0! [&_.shiki]:border-0!"
+        className="code-scroll [&_.shiki]:m-0! [&_.shiki]:rounded-none [&_.shiki]:border-0! [&_.shiki]:bg-transparent!"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </figure>
