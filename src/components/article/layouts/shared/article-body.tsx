@@ -14,7 +14,7 @@ export function ArticleBody({body, className}: ArticleBodyProps) {
   return (
     <div
       className={cn(
-        'max-w-[72ch] text-[1.125rem] leading-[1.7] dark:leading-[1.75]',
+        'min-w-0 max-w-[72ch] text-[1.125rem] leading-[1.7] dark:leading-[1.75]',
         className,
       )}
     >

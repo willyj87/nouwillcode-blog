@@ -75,25 +75,45 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Shiki code blocks */
+/* Shiki code blocks
+   The .shiki element is rendered inside a scrollable wrapper div in CodeBlock.
+   overflow-x lives on the wrapper (.code-scroll), not here, so mobile scroll
+   works correctly and the page never overflows horizontally. */
+.code-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* Scroll shadows: a right-edge fade appears only while more code is hidden,
+     hinting horizontal scroll on touch devices. Pure CSS, no JS.
+     Cover layers sit on the container's own dark surface; shadow layers are
+     locally-attached so they reveal/hide as the user scrolls. */
+  background:
+    linear-gradient(to right, #24292e 30%, rgba(36, 41, 46, 0)) left center,
+    linear-gradient(to left, #24292e 30%, rgba(36, 41, 46, 0)) right center,
+    radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)) left center,
+    radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0)) right center;
+  background-repeat: no-repeat;
+  background-size:
+    2.5rem 100%,
+    2.5rem 100%,
+    0.75rem 100%,
+    0.75rem 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
 .shiki {
-  border-radius: var(--radius-md);
   padding: 0.875rem 1rem;
   font-size: 0.85rem;
   line-height: 1.6;
-  max-width: 100%;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-  border: 1px solid var(--border);
-  border: 1px solid color-mix(in oklab, var(--foreground) 16%, transparent);
+  background: transparent;
+  /* let the code content define the width; the wrapper clips and scrolls */
+  width: max-content;
+  min-width: 100%;
 }
 .shiki code {
   display: block;
-  width: max-content;
-  min-width: 100%;
-  white-space: pre;
   font-family: var(--font-mono), monospace;
+  white-space: pre;
 }
 
 @media (min-width: 640px) {
