@@ -1,7 +1,7 @@
-import Image from "next/image"
 import Link from "next/link"
 import type { ComponentType, SVGProps } from "react"
 import { GlobeIcon, MailIcon } from "lucide-react"
+import { Image } from "next-sanity/image"
 import {
   GithubIcon,
   LinkedinIcon,

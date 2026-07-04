@@ -1,10 +1,10 @@
-import Image from "next/image"
 import Link from "next/link"
 import {
   PortableText,
   type PortableTextComponents,
   type PortableTextBlock,
 } from "@portabletext/react"
+import { Image } from "next-sanity/image"
 
 import {createHeadingId} from '@/lib/article/content-signature'
 import { urlFor } from "@/sanity/lib/image"

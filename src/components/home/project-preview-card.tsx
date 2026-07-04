@@ -1,6 +1,6 @@
-import Image from "next/image"
 import Link from "next/link"
 import { ArrowUpRightIcon } from "lucide-react"
+import { Image } from "next-sanity/image"
 
 import { GithubIcon } from "@/components/icons/brand-icons"
 import { cn } from "@/lib/utils"

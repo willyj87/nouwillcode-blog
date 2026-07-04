@@ -1,5 +1,5 @@
 import type {PortableTextBlock} from '@portabletext/react'
-import Image from 'next/image'
+import {Image} from 'next-sanity/image'
 
 import {ShareButtons} from '@/components/article/share-buttons'
 import {Badge} from '@/components/ui/badge'

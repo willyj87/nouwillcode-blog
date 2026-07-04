@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
-import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeftIcon, ArrowUpRightIcon } from "lucide-react"
+import { Image } from "next-sanity/image"
 
 import { GithubIcon } from "@/components/icons/brand-icons"
 import { Badge } from "@/components/ui/badge"
@@ -37,13 +37,13 @@ export async function generateMetadata({
   // Extract plain text from the first PortableText block for meta description
   const metaDescription = Array.isArray(project.description)
     ? project.description
-        .flatMap((block) =>
-          block._type === "block" && Array.isArray(block.children)
-            ? (block.children as { text?: string }[]).map((s) => s.text ?? "")
-            : []
-        )
-        .join(" ")
-        .slice(0, 160) || undefined
+      .flatMap((block) =>
+        block._type === "block" && Array.isArray(block.children)
+          ? (block.children as { text?: string }[]).map((s) => s.text ?? "")
+          : []
+      )
+      .join(" ")
+      .slice(0, 160) || undefined
     : undefined
 
   return {
@@ -116,7 +116,7 @@ export default async function ProjectPage({
         </header>
 
         {project.coverImage && (
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-muted ring-1 ring-foreground/10">
+          <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted ring-1 ring-foreground/10">
             <Image
               src={urlFor(project.coverImage).width(1600).height(900).url()}
               alt={project.coverImage.alt || project.title || "Project cover"}

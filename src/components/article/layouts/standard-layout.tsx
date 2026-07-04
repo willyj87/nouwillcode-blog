@@ -1,5 +1,5 @@
-import Image from 'next/image'
 import type {PortableTextBlock} from '@portabletext/react'
+import {Image} from 'next-sanity/image'
 
 import {ArticleBody} from '@/components/article/layouts/shared/article-body'
 import {ArticleMeta} from '@/components/article/layouts/shared/article-meta'
