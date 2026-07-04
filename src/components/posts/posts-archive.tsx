@@ -15,6 +15,8 @@ const SEARCH_TRACK_DELAY = 500
 interface PostsArchiveProps {
   posts: AllPostsQueryResult
   categories: AllCategoriesQueryResult
+  initialCategorySlug?: string
+  initialSearchQuery?: string
 }
 
 /**
@@ -22,9 +24,19 @@ interface PostsArchiveProps {
  * Server-side RSC fetches and passes all posts + categories here.
  * Featured band (top 3) hides when a filter is active.
  */
-export function PostsArchive({ posts, categories }: PostsArchiveProps) {
-  const [search, setSearch] = useState("")
-  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+export function PostsArchive({
+  posts,
+  categories,
+  initialCategorySlug,
+  initialSearchQuery,
+}: PostsArchiveProps) {
+  const [search, setSearch] = useState(() => initialSearchQuery?.trim() ?? "")
+  const [activeCategory, setActiveCategory] = useState<string | null>(() => {
+    if (!initialCategorySlug) return null
+    return categories.some((category) => category.slug === initialCategorySlug)
+      ? initialCategorySlug
+      : null
+  })
   const [currentPage, setCurrentPage] = useState(1)
 
   const isFiltering = search.trim().length > 0 || activeCategory !== null

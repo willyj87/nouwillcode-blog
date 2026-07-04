@@ -37,7 +37,7 @@ function EmptyHero({
         </p>
         <div>
           <Link
-            href="/blog"
+            href="/posts"
             className={cn(
               "inline-flex h-11 items-center justify-center gap-2 rounded-full px-7",
               "bg-foreground text-background text-sm font-semibold",

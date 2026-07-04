@@ -9,7 +9,7 @@ import { ThemeToggle } from "./theme-toggle"
 export async function Navbar() {
   const { data: navbar } = await sanityFetch({ query: navbarQuery })
 
-  const links = navbar?.links || [{ label: "Blog", href: "/blog" }]
+  const links = navbar?.links || [{ label: "Posts", href: "/posts" }]
   const githubUrl = navbar?.githubUrl || "https://github.com"
 
   return (

@@ -9,7 +9,27 @@ export const metadata: Metadata = {
   description: "All tech articles, lessons learned, and software engineering notes.",
 }
 
-export default async function PostsPage() {
+type RouteSearchParams = Record<string, string | string[] | undefined>
+
+function readParam(
+  params: RouteSearchParams | undefined,
+  key: string,
+): string | undefined {
+  const value = params?.[key]
+  if (Array.isArray(value)) return value[0]
+  return value
+}
+
+export default async function PostsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<RouteSearchParams>
+}) {
+  const params = await searchParams
+  const initialCategorySlug =
+    readParam(params, "category") ?? readParam(params, "tag")
+  const initialSearchQuery = readParam(params, "search") ?? readParam(params, "q")
+
   const [{ data: posts }, { data: categories }] = await Promise.all([
     sanityFetch({ query: allPostsQuery }),
     sanityFetch({ query: allCategoriesQuery }),
@@ -26,7 +46,12 @@ export default async function PostsPage() {
         </p>
       </header>
 
-      <PostsArchive posts={posts ?? []} categories={categories ?? []} />
+      <PostsArchive
+        posts={posts ?? []}
+        categories={categories ?? []}
+        initialCategorySlug={initialCategorySlug}
+        initialSearchQuery={initialSearchQuery}
+      />
     </main>
   )
 }

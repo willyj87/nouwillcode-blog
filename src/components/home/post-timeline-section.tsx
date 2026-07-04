@@ -30,7 +30,7 @@ export function PostTimelineSection({
             The next post is in the works. Come back shortly.
           </p>
           <Link
-            href="/blog"
+            href="/posts"
             className="text-sm font-medium text-primary underline-offset-4 hover:underline"
           >
             {cta}
@@ -51,7 +51,7 @@ export function PostTimelineSection({
           Recent posts
         </h2>
         <Link
-          href="/blog"
+          href="/posts"
           className="hidden text-xs font-medium text-muted-foreground transition-colors hover:text-foreground md:inline-flex"
         >
           {cta}
@@ -96,7 +96,7 @@ export function PostTimelineSection({
       {/* Mobile CTA */}
       <div className="mt-10 md:hidden">
         <Link
-          href="/blog"
+          href="/posts"
           className="inline-flex h-10 w-full items-center justify-center rounded-full border text-sm font-medium transition-colors hover:bg-muted sm:w-auto sm:px-8"
         >
           {cta}
